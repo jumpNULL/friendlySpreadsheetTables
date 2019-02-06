@@ -1,0 +1,15 @@
+{
+    "name": "nelson/php-spreadsheet-helper",
+    "description": "Package for assisting in the generation of Spreadsheet utilizing PHPSpreadsheet.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nelson Bassett",
+            "email": "nelson.bassett@4rsoluciones.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.6"
+    }
+}
