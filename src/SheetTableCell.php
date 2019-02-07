@@ -14,13 +14,9 @@ namespace Crombi\PhpSpreadsheetHelper;
  *
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SheetTableCell {
-    /**
-     * @var array The upper left-hand sheet cell which will act as the origin
-     *            for all sheet placement calculations with respect to the table
-     *            cell.
-     */
-    private $cellAnchor;
+class SheetTableCell implements TableEntityInterface
+{
+    use AnchorableTrait;
 
     /**
      * @var array Array of PhpSpreadsheet styles to apply.
@@ -28,14 +24,6 @@ class SheetTableCell {
      * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
      */
     private $styleArray;
-
-    /**
-     * @var array Table cells dimensions are measured in sheet cells. A table cell
-     *            may have non-unity width and height. In such a case, the sheet
-     *            cells surrounding the anchor cell are merged to create the table
-     *            cell.
-     */
-    private $cellDimensions;
 
     /**
      * @var \stdClass The cells value. If the cells value is not a number or float,
@@ -56,33 +44,10 @@ class SheetTableCell {
     public function __construct(\stdClass $value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
                                 array $styleArray = array())
     {
-        $this->cellAnchor = array();
         $this->styleArray = $styleArray;
         $this->setSheetCellHeight($sheetCellHeight);
         $this->setSheetCellWidth($sheetCellWidth);
         $this->setValue($value);
-    }
-
-    /**
-     * Anchor a tables cell to a sheet cell. This is necessary for calculating
-     * sheet range properties and a prerequisite to attaching to a sheet.
-     *
-     * @param string $cellColumn
-     * @param int    $cellRow
-     *
-     * @return SheetTableCell
-     * @throws InvalidSheetCellAddressException
-     */
-    public function anchor(string $cellColumn, int $cellRow) : SheetTableCell
-    {
-        if (Utility::validSheetCell($cellColumn, $cellRow)){
-            $this->cellAnchor['column'] = $cellColumn;
-            $this->cellAnchor['row'] = $cellRow;
-        } else
-            throw new InvalidSheetCellAddressException($cellColumn .
-                strval($cellRow));
-
-        return $this;
     }
 
     /**
@@ -91,22 +56,6 @@ class SheetTableCell {
     public function getValue() : \stdClass
     {
         return $this->value;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSheetCellHeight() : int
-    {
-        return $this->cellDimensions['height'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getSheetCellWidth() : int
-    {
-        return $this->cellDimensions['width'];
     }
 
     /**
@@ -126,40 +75,6 @@ class SheetTableCell {
     {
         if(!is_null($value))
             $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @param int $cellWidth
-     *
-     * @return SheetTableCell
-     *
-     * @throws InvalidTableCellDimensionException
-     */
-    public function setSheetCellWidth(int $cellWidth) : SheetTableCell
-    {
-        if($cellWidth <= 0)
-            throw new InvalidTableCellDimensionException('Width', $cellWidth);
-        else
-            $this->cellDimensions['cellWidth'] = $cellWidth;
-
-        return $this;
-    }
-
-    /**
-     * @param int $cellHeight
-     *
-     * @return SheetTableCell
-     *
-     * @throws InvalidTableCellDimensionException
-     */
-    public function setSheetCellHeight(int $cellHeight) : SheetTableCell
-    {
-        if($cellHeight <= 0)
-            throw new InvalidTableCellDimensionException('Height', $cellHeight);
-        else
-            $this->cellDimensions['cellHeight'] = $cellHeight;
 
         return $this;
     }

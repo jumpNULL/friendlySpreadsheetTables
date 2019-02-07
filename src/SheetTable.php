@@ -22,12 +22,12 @@ namespace Crombi\PhpSpreadsheetHelper;
  * column or sub-table.
  *
  * @todo Decouple classes from PHPSpreadsheet and its styling.
- * @todo Refactor code base into utilizing traits for sheet mapping (anchoring,
- *       dimensions, etc.)
  *
  * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
  */
-class SheetTable {
+class SheetTable implements TableEntityInterface
+{
+    use AnchorableTrait;
     /**
      * @var array $column Map from column names to column configuration.
      */
@@ -63,4 +63,5 @@ class SheetTable {
     public function addRows(array $rows){
         return $this;
     }
+
 }

@@ -17,7 +17,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  *
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SpreadsheetTableFacade {
+class SpreadsheetTableFacade
+{
 
     private $tables;
 

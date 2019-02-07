@@ -18,9 +18,10 @@ namespace Crombi\PhpSpreadsheetHelper;
  * @see SheetTableCell
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SheetTableColumn
+class SheetTableColumn implements TableEntityInterface
 {
-    private $cellAnchor;
+    use AnchorableTrait;
+
     private $footerStyleArray;
     private $headerStyleArray;
     private $cellWidth;
@@ -53,34 +54,11 @@ class SheetTableColumn
         $this->footer = $footer;
         $this->sheetCells = $sheetCells;
         $this->lockedWidth = false;
-        $this->cellAnchor = array();
         $this->footerStyleArray = $footerStyleArray;
         $this->headerStyleArray = $headerStyleArray;
     }
 
     //------------------------TABLE METHODS----------------------//
-    /**
-     * Anchor a tables cell to a sheet cell. This is necessary for calculating
-     * sheet range properties and a prerequisite to attaching to a sheet.
-     *
-     * @param string $cellColumn
-     * @param int    $cellRow
-     *
-     * @return SheetTableColumn
-     * @throws InvalidSheetCellAddressException
-     */
-    public function anchor(string $cellColumn, int $cellRow) : SheetTableColumn
-    {
-        if (Utility::validSheetCell($cellColumn, $cellRow)){
-            $this->cellAnchor['column'] = $cellColumn;
-            $this->cellAnchor['row'] = $cellRow;
-        } else
-            throw new InvalidSheetCellAddressException($cellColumn .
-                strval($cellRow));
-
-        return $this;
-    }
-
     /**
      * @param \stdClass $header
      *
@@ -136,22 +114,6 @@ class SheetTableColumn
     }
 
     /**
-     * @return int
-     */
-    public function getCellRangeWidth() : int
-    {
-
-    }
-
-    /**
-     * @return int
-     */
-    public function getCellRangeHeight() : int
-    {
-
-    }
-
-    /**
      * @param array $styleArray
      *
      * @return SheetTableColumn
@@ -170,4 +132,6 @@ class SheetTableColumn
     {
         return $this;
     }
+
+
 }
