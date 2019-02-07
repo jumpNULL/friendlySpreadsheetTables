@@ -14,16 +14,15 @@ namespace Crombi\PhpSpreadsheetHelper;
  *
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SheetTableCell
+class SheetTableCell extends AnchorableEntity
 {
-    use AnchorableTrait;
 
     /**
      * @var object The cells value. If the cells value is not a number or float,
      *                then the value is cast to a string.
      */
     private $value;
-
+    private $styleArray;
     /**
      * SheetTableCell constructor.
      *
@@ -37,6 +36,7 @@ class SheetTableCell
     public function __construct(object $value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
                                 array $styleArray = array())
     {
+        parent::__construct();
         $this->styleArray = $styleArray;
         $this->setSheetCellHeight($sheetCellHeight);
         $this->setSheetCellWidth($sheetCellWidth);
@@ -69,7 +69,7 @@ class SheetTableCell
      */
     public function getStyleArray() : array
     {
-        return [];
+        return $this->styleArray;
     }
 
     /**
@@ -91,5 +91,10 @@ class SheetTableCell
     public function applyStyle() : SheetTableCell
     {
         return $this;
+    }
+
+    public function resolveAddresses(): AnchorableEntity
+    {
+        // TODO: Implement resolveAddresses() method.
     }
 }

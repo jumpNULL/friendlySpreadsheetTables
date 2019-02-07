@@ -20,13 +20,8 @@ use mysql_xdevapi\Exception;
  * @see SheetTableCell
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SheetTableColumn
+class SheetTableColumn extends AnchorableEntity
 {
-    use AnchorableTrait {
-        setSheetCellWidth as protected setCellWidth;
-        setSheetCellHeight as private setSheetCellHeight;
-        getSheetCellHeight as private getCellHeight;
-    }
 
     private $cellWidth;
 
@@ -38,6 +33,7 @@ class SheetTableColumn
     private $header;
     private $footer;
     private $sheetCells;
+    private $styleArray;
 
     /**
      * SheetTableColumn constructor.
@@ -52,6 +48,7 @@ class SheetTableColumn
                                 array $headerStyleArray = array(), object $footerValue = NULL,
                                 array $footerStyleArray = array() )
     {
+        parent::__construct();
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
         $this->sheetCells = array();
@@ -77,6 +74,11 @@ class SheetTableColumn
         return $this->lockedWidth;
     }
 
+    public function resolveAddresses()
+    {
+        // TODO: Implement resolveAddresses() method.
+    }
+
     /**
      * @param int $cellWidth
      *
@@ -87,7 +89,7 @@ class SheetTableColumn
     public function setSheetCellWidth(int $cellWidth) : SheetTableColumn
     {
         if(!$this->isWidthLocked())
-            $this->setCellWidth($cellWidth);
+            parent::setSheetCellWidth($cellWidth);
         else
             throw new TableColumnWidthLocked();
         return $this;
@@ -235,12 +237,13 @@ class SheetTableColumn
      */
     public function setStyleArray (array $styleArray) : SheetTableColumn
     {
+        $this->styleArray = $styleArray;
         return $this;
     }
 
     public function getStyleArray () : array
     {
-        return [];
+        return $styleArray;
     }
 
     /**

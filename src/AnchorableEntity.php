@@ -1,34 +1,41 @@
 <?php
 namespace Crombi\PhpSpreadsheetHelper;
 
-trait AnchorableTrait
+abstract class AnchorableEntity
 {
     /**
      * @var array The upper left-hand sheet cell which will act as the origin
      *            for all sheet placement calculations with respect to the table
      *            cell.
      */
-    private $cellAnchor =  [
-        'column' => NULL,
-        'row' => NULL
-    ];
+    private $cellAnchor;
 
     /**
      * @var array Dimensions are measured in sheet cells. Given non-unity width
      *            and height, sheet cells surrounding the anchor cell are merged
      *            to create a single cell.
      */
-    private $cellDimensions = [
-        'width' => 1,
-        'height' => 1
-    ];
+    private $cellDimensions;
 
+    protected function __construct() {
+        $this->cellAnchor = (object) [
+            'column' => NULL,
+            'row' => NULL
+        ];
+
+        $this->cellDimensions = (object) [
+            'width' => 1,
+            'height' => 1
+        ];
+    }
+
+    abstract protected function resolveAddresses();
     /**
      * @return int
      */
     public function getSheetCellHeight() : int
     {
-        return $this->cellDimensions['height'];
+        return $this->cellDimensions->height;
     }
 
     /**
@@ -36,7 +43,7 @@ trait AnchorableTrait
      */
     public function getSheetCellWidth() : int
     {
-        return $this->cellDimensions['width'];
+        return $this->cellDimensions->width;
     }
 
     /**
@@ -59,8 +66,8 @@ trait AnchorableTrait
             $height = $this->getSheetCellHeight();
 
             return (object) array(
-                'column' => $this->cellAnchor['column'] + --$width,
-                'row' => $this->cellAnchor['row'] + --$height
+                'column' => $this->cellAnchor->column + --$width,
+                'row' => $this->cellAnchor->row + --$height
             );
         }
     }
@@ -77,7 +84,7 @@ trait AnchorableTrait
         if($cellWidth <= 0)
             throw new InvalidTableCellDimensionException('Width', $cellWidth);
         else
-            $this->cellDimensions['width'] = $cellWidth;
+            $this->cellDimensions->width = $cellWidth;
 
         return $this;
     }
@@ -94,7 +101,7 @@ trait AnchorableTrait
         if($cellHeight <= 0)
             throw new InvalidTableCellDimensionException('Height', $cellHeight);
         else
-            $this->cellDimensions['height'] = $cellHeight;
+            $this->cellDimensions->height = $cellHeight;
 
         return $this;
     }
@@ -112,8 +119,9 @@ trait AnchorableTrait
     public function anchor(string $cellColumn, int $cellRow)
     {
         if (Utility::validSheetCell($cellColumn, $cellRow)){
-            $this->cellAnchor['height'] = $cellColumn;
-            $this->cellAnchor['row']   = $cellRow;
+            $this->cellAnchor->height = $cellColumn;
+            $this->cellAnchor->row   = $cellRow;
+            $this->resolve();
         } else
             throw new InvalidSheetCellAddressException($cellColumn .
                 strval($cellRow));

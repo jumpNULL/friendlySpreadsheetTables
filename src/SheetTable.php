@@ -25,24 +25,28 @@ namespace Crombi\PhpSpreadsheetHelper;
  *       be refactored to a Trait so as to gather as much externally dependant code
  *       into one place.
  *
+ * @todo Support LEFT_RIGHT columns (building tables from 'rows').
+ *
+ * @todo Allow attaching data type metadata on different table entities. By attaching
+ *       data type to collection of entities (table or columns), all entity elements
+ *       in that collection are guaranteed to be of the given datatype.
+ *
+ *
  * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
  */
-class SheetTable
+class SheetTable extends AnchorableEntity
 {
-    use AnchorableTrait;
+
     /**
      * @var array $column Map from column names to column configuration.
      */
-    private $column = array();
-
-    /**
-     * @var bool $lockedColumns Indicates whether columns are locked, preventing
-     *   new columns from being added.
-     */
-    private $lockedColumns = false;
+    private $columns;
+    private $styleArray;
+    private $isRectangularTable;
 
     public function __construct()
     {
+        parent::__construct();
     }
 
     /**
@@ -51,21 +55,48 @@ class SheetTable
      * @param array $columns Set of columns to insert into table.
      * @return SheetTable
      */
-    public function addColumns(array $columns) {
+    public function addColumns(SheetTableColumn ...$columns) : SheetTable
+    {
+
         return $this;
     }
 
+    public function addSubTables(SheetTable ...$tables) : SheetTable
+    {
+        return $this;
+    }
+
+    public function resolveAddresses()
+    {
+        // TODO: Implement resolveAddresses() method.
+    }
+
     /**
-     * Adds a row and optional cell-associated style. Cell styles take priority
-     * over the general column style.
      *
      * @param array $rows Set of values to insert into table.
      * @return SheetTable
      */
-    public function addRows(array $rows){
+    public function addValues(array ...$value) : SheetTable
+    {
         return $this;
     }
 
+    public function isRectangularTable() : bool
+    {
+        return $this->isRectangularTable;
+    }
+
+    public function rectangularTable(bool $isRectangular) : SheetTable
+    {
+        $this->isRectangularTable = $isRectangular;
+
+        return $this;
+    }
+
+    public function resolve() : SheetTable
+    {
+        //calculate and set anchor points for children
+    }
     /**
      * Sets the tables style. A tables style applies to all elements it contains.
      * It is important however to note, however, that an elements style takes
@@ -77,12 +108,17 @@ class SheetTable
      */
     public function setStyleArray (array $styleArray) : SheetTable
     {
+        $this->styleArray = $styleArray;
+
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getStyleArray () : array
     {
-        return [];
+        return $this->styleArray;
     }
 
     /**
@@ -96,5 +132,4 @@ class SheetTable
     {
         return $this;
     }
-
 }
