@@ -16,7 +16,7 @@ $table = new SheetTable();
 //Test variable width columns with mismatched data amount and building table out
 //from the pre-populated columns
 $table->addColumns([
-    (new SheetTableColumn())->setHeader((object)'ColumnOne')->setSheetCellWidth(2)->addValues([1,2])->setFooter(1+2),
+    (new SheetTableColumn())->setHeader((object)'ColumnOne')->setSheetCellWidth(2)->addValues([1,2])->setFooter((object) (1+2)),
     (new SheetTableColumn())->setHeader((object)'ColumnTwo')->addValues([3])
 ]);
 

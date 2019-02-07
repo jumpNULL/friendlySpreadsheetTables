@@ -21,7 +21,9 @@ namespace Crombi\PhpSpreadsheetHelper;
  * of each column and sub-table, but the height is the height of the largest
  * column or sub-table.
  *
- * @todo Decouple classes from PHPSpreadsheet and its styling.
+ * @todo Decouple classes from PHPSpreadsheet and its styling. Styling should probably
+ *       be refactored to a Trait so as to gather as much externally dependant code
+ *       into one place.
  *
  * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
  */

@@ -54,6 +54,7 @@ class SheetTableColumn
     {
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
+        $this->sheetCells = array();
         $this->setHeader($headerValue);
         $this->setHeaderStyleArray($headerStyleArray);
         $this->setFooter($footerValue);
@@ -150,7 +151,7 @@ class SheetTableColumn
             $this->lockedWidth = true;
 
             try {
-                $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
+                $sheetTableCell = new SheetTableCell((object) $value, $this->getSheetCellWidth());
             } catch (\Exception $e) {
                 continue;
             }
