@@ -52,7 +52,8 @@ class SheetTable extends AnchorableEntity
     /**
      * Adds an ordered set of columns to the tables column ordered collection.
      *
-     * @param array $columns Set of columns to insert into table.
+     * @param SheetTableColumn ...$columns Set of columns to insert into table.
+     *
      * @return SheetTable
      */
     public function addColumns(SheetTableColumn ...$columns) : SheetTable
@@ -73,7 +74,8 @@ class SheetTable extends AnchorableEntity
 
     /**
      *
-     * @param array $rows Set of values to insert into table.
+     * @param array[] $value
+     *
      * @return SheetTable
      */
     public function addValues(array ...$value) : SheetTable
@@ -93,10 +95,6 @@ class SheetTable extends AnchorableEntity
         return $this;
     }
 
-    public function resolve() : SheetTable
-    {
-        //calculate and set anchor points for children
-    }
     /**
      * Sets the tables style. A tables style applies to all elements it contains.
      * It is important however to note, however, that an elements style takes

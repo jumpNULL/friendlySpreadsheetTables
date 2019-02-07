@@ -93,8 +93,13 @@ class SheetTableCell extends AnchorableEntity
         return $this;
     }
 
+    /**
+     * Table cells are atomic and have no post-anchor update logic. This
+     * function simply returns the cell.
+     * @return AnchorableEntity
+     */
     public function resolveAddresses(): AnchorableEntity
     {
-        // TODO: Implement resolveAddresses() method.
+        return $this;
     }
 }

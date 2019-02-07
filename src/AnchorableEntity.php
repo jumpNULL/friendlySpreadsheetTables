@@ -8,7 +8,7 @@ abstract class AnchorableEntity
      *            for all sheet placement calculations with respect to the table
      *            cell.
      */
-    private $cellAnchor;
+    protected $cellAnchor;
 
     /**
      * @var array Dimensions are measured in sheet cells. Given non-unity width
@@ -28,6 +28,14 @@ abstract class AnchorableEntity
             'height' => 1
         ];
     }
+
+    /**
+     * Extension point for allowing AnchorableEntity implementations
+     * to update the anchor points of any children identities, or any other
+     * post-anchor update conditional logic.
+     *
+     * @return mixed
+     */
 
     abstract protected function resolveAddresses();
     /**
@@ -49,7 +57,7 @@ abstract class AnchorableEntity
     /**
      * Returns the address lower right cell.
      *
-     * @return array
+     * @return object
      *
      * @throws UnanchoredException
      */
@@ -75,7 +83,7 @@ abstract class AnchorableEntity
     /**
      * @param int $cellWidth
      *
-     * @return TableEntityInterface
+     * @return AnchorableEntity
      *
      * @throws InvalidTableCellDimensionException
      */
@@ -92,7 +100,7 @@ abstract class AnchorableEntity
     /**
      * @param int $cellHeight
      *
-     * @return TableEntityInterface
+     * @return AnchorableEntity
      *
      * @throws InvalidTableCellDimensionException
      */
@@ -113,7 +121,7 @@ abstract class AnchorableEntity
      * @param string $cellColumn
      * @param int    $cellRow
      *
-     * @return TableEntityInterface
+     * @return AnchorableEntity
      * @throws InvalidSheetCellAddressException
      */
     public function anchor(string $cellColumn, int $cellRow)
@@ -121,7 +129,7 @@ abstract class AnchorableEntity
         if (Utility::validSheetCell($cellColumn, $cellRow)){
             $this->cellAnchor->height = $cellColumn;
             $this->cellAnchor->row   = $cellRow;
-            $this->resolve();
+            $this->resolveAddresses();
         } else
             throw new InvalidSheetCellAddressException($cellColumn .
                 strval($cellRow));

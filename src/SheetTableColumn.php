@@ -74,9 +74,26 @@ class SheetTableColumn extends AnchorableEntity
         return $this->lockedWidth;
     }
 
+    //Updates anchor cell for all child table cells.
     public function resolveAddresses()
     {
-        // TODO: Implement resolveAddresses() method.
+        $cellColumn = $this->cellAnchor->column;
+        $cellRow = $this->cellAnchor->row;
+
+        //header cell comes first
+        if(!is_null($this->header)) {
+            $this->header->anchor($cellColumn, $cellRow);
+            $cellRow += $this->header->getSheetCellWidth();
+        }
+
+        foreach ($this->sheetCells as $cell){
+            $cell->anchor($cellColumn, $cellRow);
+            $cellRow += $cell->getSheetCellWidth();
+        }
+
+        //footer cell comes last
+        if(!is_null($this->footer))
+            $this->footer->anchor($cellColumn, $cellRow);
     }
 
     /**
@@ -243,7 +260,7 @@ class SheetTableColumn extends AnchorableEntity
 
     public function getStyleArray () : array
     {
-        return $styleArray;
+        return $this->styleArray;
     }
 
     /**
