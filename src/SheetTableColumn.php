@@ -20,10 +20,9 @@ namespace Crombi\PhpSpreadsheetHelper;
  */
 class SheetTableColumn
 {
-    private $upperLeftCell;
+    private $cellAnchor;
     private $footerStyleArray;
-    private $titleStyleArray;
-
+    private $headerStyleArray;
     private $cellWidth;
 
     /**
@@ -35,63 +34,139 @@ class SheetTableColumn
     private $footer;
     private $sheetCells;
 
-    public function __construct()
+    /**
+     * SheetTableColumn constructor.
+     *
+     * @param array          $sheetCells
+     * @param \stdClass|NULL $title
+     * @param \stdClass|NULL $footer
+     * @param array          $footerStyleArray
+     * @param array          $headerStyleArray
+     */
+    public function __construct(array $sheetCells = array(), \stdClass $title = NULL,
+                                \stdClass $footer = NULL, array $footerStyleArray = array(),
+                                array $headerStyleArray = array())
     {
-        $this->title = NULL;
-        $this->footer = NULL;
-        $this->sheetCells = array();
+        //An empty string would be a cell with an empty title, NULL
+        //is _no_ cell
+        $this->title = $title;
+        $this->footer = $footer;
+        $this->sheetCells = $sheetCells;
+        $this->lockedWidth = false;
+        $this->cellAnchor = array();
+        $this->footerStyleArray = $footerStyleArray;
+        $this->headerStyleArray = $headerStyleArray;
     }
 
     //------------------------TABLE METHODS----------------------//
-    public function setTitle($title)
+    /**
+     * Anchor a tables cell to a sheet cell. This is necessary for calculating
+     * sheet range properties and a prerequisite to attaching to a sheet.
+     *
+     * @param string $cellColumn
+     * @param int    $cellRow
+     *
+     * @return SheetTableColumn
+     * @throws InvalidSheetCellAddressException
+     */
+    public function anchor(string $cellColumn, int $cellRow) : SheetTableColumn
+    {
+        if (Utility::validSheetCell($cellColumn, $cellRow)){
+            $this->cellAnchor['column'] = $cellColumn;
+            $this->cellAnchor['row'] = $cellRow;
+        } else
+            throw new InvalidSheetCellAddressException($cellColumn .
+                strval($cellRow));
+
+        return $this;
+    }
+
+    /**
+     * @param \stdClass $header
+     *
+     * @return SheetTableColumn
+     */
+    public function setHeader(\stdClass $header) : SheetTableColumn
     {
         return $this;
     }
 
-    public function setFooter($footer)
+    /**
+     * @param \stdClass $footer
+     *
+     * @return SheetTableColumn
+     */
+    public function setFooter(\stdClass $footer) : SheetTableColumn
     {
         return $this;
     }
 
-    public function addValues($values)
+    /**
+     * @param array $values
+     *
+     * @return SheetTableColumn
+     */
+    public function addValues(array $values) : SheetTableColumn
     {
         foreach ($values as $value)
         {
-            array_push($this->sheetCells, new Cell());
+            $this->lockedWidth = true;
+
+            try {
+                $sheetTableCell = new SheetTableCell($value);
+            } catch (\Exception $e) {
+                continue;
+            }
+
+            array_push($this->sheetCells, $sheetTableCell);
         }
 
         return $this;
     }
 
-    public function getValues()
+    /**
+     * @return array
+     */
+    public function getValues() : array
     {
-        return array_map(function ($ele)
+        return array_map(function (SheetTableCell $ele) : \stdClass
         {
             return $ele->getValue();
         }, $this->sheetCells);
     }
-    //------------------SHEET RENDERING METHODS------------------//
-    public function attach($cellColumn, $cellRow)
+
+    /**
+     * @return int
+     */
+    public function getCellRangeWidth() : int
     {
 
     }
 
-    public function getCellRangeWidth()
+    /**
+     * @return int
+     */
+    public function getCellRangeHeight() : int
     {
 
     }
 
-    public function getCellRangeHeight()
-    {
-
-    }
-
-    public function setTitleStyleArray ($array)
+    /**
+     * @param array $styleArray
+     *
+     * @return SheetTableColumn
+     */
+    public function setTitleStyleArray (array $styleArray) : SheetTableColumn
     {
         return $this;
     }
 
-    public function setFooterStyleArray($array)
+    /**
+     * @param array $styleArray
+     *
+     * @return SheetTableColumn
+     */
+    public function setFooterStyleArray(array $styleArray) : SheetTableColumn
     {
         return $this;
     }

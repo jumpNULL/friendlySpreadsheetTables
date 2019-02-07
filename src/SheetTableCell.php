@@ -46,24 +46,21 @@ class SheetTableCell {
     /**
      * SheetTableCell constructor.
      *
+     * @param \stdClass $value
      * @param int $sheetCellWidth
      * @param int $sheetCellHeight
+     * @param array $styleArray
      *
      * @throws InvalidTableCellDimensionException
      */
-    public function __construct(int $sheetCellWidth = 1, int $sheetCellHeight = 1)
+    public function __construct(\stdClass $value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
+                                array $styleArray = array())
     {
         $this->cellAnchor = array();
-        $this->styleArray = array();
-
-        if($sheetCellWidth <= 0) {
-            throw new InvalidTableCellDimensionException('Width', $sheetCellWidth);
-        } elseif ($sheetCellHeight <= 0){
-            throw new InvalidTableCellDimensionException('Height', $sheetCellHeight);
-        }
-
-        $this->cellDimensions['cellWidth'] = $sheetCellWidth;
-        $this->cellDimensions['cellHeight'] = $sheetCellHeight;
+        $this->styleArray = $styleArray;
+        $this->setSheetCellHeight($sheetCellHeight);
+        $this->setSheetCellWidth($sheetCellWidth);
+        $this->setValue($value);
     }
 
     /**
@@ -88,8 +85,6 @@ class SheetTableCell {
         return $this;
     }
 
-
-
     /**
      * @return \stdClass
      */
@@ -97,7 +92,6 @@ class SheetTableCell {
     {
         return $this->value;
     }
-
 
     /**
      * @return int
@@ -130,7 +124,8 @@ class SheetTableCell {
      */
     public function setValue(\stdClass $value) : SheetTableCell
     {
-        $this->value = $value;
+        if(!is_null($value))
+            $this->value = $value;
 
         return $this;
     }
@@ -169,4 +164,15 @@ class SheetTableCell {
         return $this;
     }
 
+    /**
+     * @param array $styleArray
+     *
+     * @return SheetTableCell
+     */
+    public function setStyleArray(array $styleArray) : SheetTableCell
+    {
+        $this->styleArray = $styleArray;
+
+        return $this;
+    }
 }

@@ -21,6 +21,11 @@ namespace Crombi\PhpSpreadsheetHelper;
  * of each column and sub-table, but the height is the height of the largest
  * column or sub-table.
  *
+ * @todo Decouple classes from PHPSpreadsheet and its styling.
+ * @todo Refactor code base into utilizing traits for sheet mapping (anchoring,
+ *       dimensions, etc.)
+ *
+ * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
  */
 class SheetTable {
     /**

@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  *
  * @todo Equations are currently not supported and must be added after building.
  *    Add support for alignment by separators in tuple values, header and footer.
- *    Decouple class from PHPSpreadsheet if possible to other providers.
+ *
  *
  * @link https://phpspreadsheet.readthedocs.io/en/develop/ PHPSpreadsheet Documentation
  *
@@ -19,14 +19,67 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  */
 class SpreadsheetTableFacade {
 
+    private $tables;
+
+    /**
+     * @var
+     */
+    private $divisorFunction;
+
     public function __construct($table)
     {
+        $this->tables = array();
     }
 
+    /**
+     * @return Spreadsheet
+     */
     public function export () : Spreadsheet
     {
         $spreadsheet = new Spreadsheet();
 
+        try {
+            $sheet = $spreadsheet->getActiveSheet();
+        } catch (\Exception $e) {
+            return NULL;
+        }
+
+
+
         return $spreadsheet;
+    }
+
+    /**
+     * The facade allows rendering multiple tables to a sheet. Each
+     * table is separated by a divider.
+     *
+     * @param SheetTable $table
+     *
+     * @return SpreadsheetTableFacade
+     */
+    public function addTables(SheetTable $table) : SpreadsheetTableFacade
+    {
+        if(!is_null($table) && is_object($table))
+            array_push($this->tables, $table);
+
+        return $this;
+    }
+
+    /**
+     * Divisor function should accept a spreadsheet parameter.
+     *
+     * @param callable $divisorFunction
+     *
+     * @return SpreadsheetTableFacade
+     */
+    public function setDivisorFunction(callable $divisorFunction) : SpreadsheetTableFacade
+    {
+
+        return $this;
+    }
+
+    public function getDivisorFunction() : callable
+    {
+        return $this->divisorFunction;
     }
 }

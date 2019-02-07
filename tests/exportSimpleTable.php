@@ -1,4 +1,5 @@
 <?php
+require '../vendor/autoload.php';
 //The only reason theres so many () is because PHP won't let us method
 //chain off a constructor if we don't wrap it in parentheses
 use \Crombi\PhpSpreadsheetHelper\SpreadsheetTableFacade;

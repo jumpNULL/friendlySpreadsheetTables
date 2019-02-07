@@ -11,5 +11,10 @@
     ],
     "require": {
         "phpoffice/phpspreadsheet": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crombi\\PhpSpreadsheetHelper\\": "src/"
+        }
     }
 }
