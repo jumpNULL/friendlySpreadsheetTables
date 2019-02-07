@@ -25,7 +25,7 @@ namespace Crombi\PhpSpreadsheetHelper;
  *
  * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
  */
-class SheetTable implements TableEntityInterface
+class SheetTable
 {
     use AnchorableTrait;
     /**
@@ -61,6 +61,37 @@ class SheetTable implements TableEntityInterface
      * @return SheetTable
      */
     public function addRows(array $rows){
+        return $this;
+    }
+
+    /**
+     * Sets the tables style. A tables style applies to all elements it contains.
+     * It is important however to note, however, that an elements style takes
+     * precedence over the tables style.
+     *
+     * @param array $styleArray
+     *
+     * @return SheetTable
+     */
+    public function setStyleArray (array $styleArray) : SheetTable
+    {
+        return $this;
+    }
+
+    public function getStyleArray () : array
+    {
+        return [];
+    }
+
+    /**
+     * Applying a style to a column applies its style to every cell it contains.
+     * It is important to note, however, that a cells style takes priority over
+     * a columns style.
+     *
+     * @return SheetTable
+     */
+    public function applyStyle() : SheetTable
+    {
         return $this;
     }
 

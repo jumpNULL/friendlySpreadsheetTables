@@ -27,9 +27,9 @@ class SpreadsheetTableFacade
      */
     private $divisorFunction;
 
-    public function __construct($table)
+    public function __construct(array $tables)
     {
-        $this->tables = array();
+        $this->addTables($tables);
     }
 
     /**

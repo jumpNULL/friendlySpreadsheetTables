@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Crombi\PhpSpreadsheetHelper;
 
+use mysql_xdevapi\Exception;
+
 /**
  * Class SheetTableColumn
  * An ordered set of values rendered vertically, each one below the last.
@@ -18,64 +20,121 @@ namespace Crombi\PhpSpreadsheetHelper;
  * @see SheetTableCell
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SheetTableColumn implements TableEntityInterface
+class SheetTableColumn
 {
-    use AnchorableTrait;
+    use AnchorableTrait {
+        setSheetCellWidth as protected setCellWidth;
+        setSheetCellHeight as private setSheetCellHeight;
+        getSheetCellHeight as private getCellHeight;
+    }
 
-    private $footerStyleArray;
-    private $headerStyleArray;
     private $cellWidth;
 
     /**
-     * @var bool Prevents the cell width count of a column being updated once a
+     * @var bool Prevents the cell width of a column being updated once a
      *           value has been added.
      */
     private $lockedWidth;
-    private $title;
+    private $header;
     private $footer;
     private $sheetCells;
 
     /**
      * SheetTableColumn constructor.
      *
-     * @param array          $sheetCells
-     * @param \stdClass|NULL $title
-     * @param \stdClass|NULL $footer
+     * @param array          $values
+     * @param object|NULL $headerValue
+     * @param object|NULL $footerValue
      * @param array          $footerStyleArray
      * @param array          $headerStyleArray
      */
-    public function __construct(array $sheetCells = array(), \stdClass $title = NULL,
-                                \stdClass $footer = NULL, array $footerStyleArray = array(),
-                                array $headerStyleArray = array())
+    public function __construct(array $values = array(), object $headerValue = NULL,
+                                array $headerStyleArray = array(), object $footerValue = NULL,
+                                array $footerStyleArray = array() )
     {
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
-        $this->title = $title;
-        $this->footer = $footer;
-        $this->sheetCells = $sheetCells;
+        $this->setHeader($headerValue);
+        $this->setHeaderStyleArray($headerStyleArray);
+        $this->setFooter($footerValue);
+        $this->setFooterStyleArray($footerStyleArray);
+        $this->addValues($values);
         $this->lockedWidth = false;
-        $this->footerStyleArray = $footerStyleArray;
-        $this->headerStyleArray = $headerStyleArray;
+
     }
 
     //------------------------TABLE METHODS----------------------//
+
     /**
-     * @param \stdClass $header
+     * Returns whether the tables column width is locked. This occurs after
+     * adding values, and setting the header or  setting the footer.
+     *
+     * @return bool
+     */
+    public function isWidthLocked() : bool
+    {
+        return $this->lockedWidth;
+    }
+
+    /**
+     * @param int $cellWidth
      *
      * @return SheetTableColumn
+     * @throws InvalidTableCellDimensionException
+     * @throws TableColumnWidthLocked
      */
-    public function setHeader(\stdClass $header) : SheetTableColumn
+    public function setSheetCellWidth(int $cellWidth) : SheetTableColumn
     {
+        if(!$this->isWidthLocked())
+            $this->setCellWidth($cellWidth);
+        else
+            throw new TableColumnWidthLocked();
         return $this;
     }
 
     /**
-     * @param \stdClass $footer
+     * @param object|NULL $headerValue Sets header to given value. If header value
+     *                               is NULL, header is removed.
      *
      * @return SheetTableColumn
      */
-    public function setFooter(\stdClass $footer) : SheetTableColumn
+    public function setHeader(?object $headerValue) : SheetTableColumn
     {
+        $headerCell = NULL;
+
+        try {
+            if(!is_null($headerValue))
+                $headerCell = new SheetTableCell($headerValue, $this->getSheetCellWidth());
+        } catch (\Exception $e) {
+            //Width exception should never occur, as if it does, it will occur
+            //when setting the columns width
+        }
+
+        $this->header = $headerCell;
+
+        return $this;
+    }
+
+    /**
+     * @param object|NULL $footerValue Sets footer to given value. If header
+     *                                    value is NULL, footer is removed.
+     *
+     * @return SheetTableColumn
+     */
+    public function setFooter(?object $footerValue) : SheetTableColumn
+    {
+        $footerCell = NULL;
+
+        try {
+            if(!is_null($footerValue))
+                $footerCell = new SheetTableCell($footerValue, $this->getSheetCellWidth());
+        } catch (\Exception $e) {
+            //Width exception should never occur, as if it does, it will occur
+            //when setting the columns width
+        }
+
+        $this->footer = $footerCell;
+
         return $this;
     }
 
@@ -91,7 +150,7 @@ class SheetTableColumn implements TableEntityInterface
             $this->lockedWidth = true;
 
             try {
-                $sheetTableCell = new SheetTableCell($value);
+                $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
             } catch (\Exception $e) {
                 continue;
             }
@@ -107,7 +166,7 @@ class SheetTableColumn implements TableEntityInterface
      */
     public function getValues() : array
     {
-        return array_map(function (SheetTableCell $ele) : \stdClass
+        return array_map(function (SheetTableCell $ele) : object
         {
             return $ele->getValue();
         }, $this->sheetCells);
@@ -118,8 +177,10 @@ class SheetTableColumn implements TableEntityInterface
      *
      * @return SheetTableColumn
      */
-    public function setTitleStyleArray (array $styleArray) : SheetTableColumn
+    public function setHeaderStyleArray (array $styleArray) : SheetTableColumn
     {
+        if(!is_null($this->header))
+            $this->header->setStyleArray($styleArray);
         return $this;
     }
 
@@ -130,8 +191,67 @@ class SheetTableColumn implements TableEntityInterface
      */
     public function setFooterStyleArray(array $styleArray) : SheetTableColumn
     {
+        if(!is_null($this->footer))
+            $this->footer->setStyleArray($styleArray);
+
         return $this;
     }
 
+    /**
+     * Setting the height of a column is not supported. A column will have a
+     * height equal to the sum of the heights of the cells that compose it.
+     *
+     * @param int $cellHeight
+     *
+     * @throws \Exception
+     */
+    public function setSheetCellHeight(int $cellHeight)
+    {
+        throw new \Exception('Invalid operation');
+    }
+
+    /**
+     * The height of a column is equal to the sum of the heights of the cells
+     * that compose it.
+     *
+     * @return int
+     */
+    public function getSheetCellHeight(): int
+    {
+        //Note that the height of a column is not equal to the number of cells multiplied
+        //by a fixed height because each cell may have different size.
+        return array_reduce($this->sheetCells, function (int $sum, SheetTableCell $cell) {
+            return $sum + $cell->getSheetCellHeight();
+    });
+    }
+
+    /**
+     * Sets the columns style.
+     *
+     * @param array $styleArray
+     *
+     * @return SheetTableColumn
+     */
+    public function setStyleArray (array $styleArray) : SheetTableColumn
+    {
+        return $this;
+    }
+
+    public function getStyleArray () : array
+    {
+        return [];
+    }
+
+    /**
+     * Applying a style to a column applies its style to every cell it contains.
+     * It is important to note, however, that a cells style takes priority over
+     * a columns style.
+     *
+     * @return SheetTableColumn
+     */
+    public function applyStyle() : SheetTableColumn
+    {
+        return $this;
+    }
 
 }

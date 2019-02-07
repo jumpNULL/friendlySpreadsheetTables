@@ -7,14 +7,17 @@ use \Crombi\PhpSpreadsheetHelper\SheetTable;
 use \Crombi\PhpSpreadsheetHelper\SheetTableColumn;
 use \PhpOffice\PhpSpreadsheet\Writer\Xls;
 
+//Collection of tables to add
+$tables = array();
+
 //Create SheetTable Model
 $table = new SheetTable();
 
 //Test variable width columns with mismatched data amount and building table out
 //from the pre-populated columns
 $table->addColumns([
-    (new SheetTableColumn())->setTitle('ColumnOne')->setCellWidth(2)->addValues([1,2]),
-    (new SheetTableColumn())->setTitle('ColumnTwo')->addValues([3])
+    (new SheetTableColumn())->setHeader((object)'ColumnOne')->setSheetCellWidth(2)->addValues([1,2])->setFooter(1+2),
+    (new SheetTableColumn())->setHeader((object)'ColumnTwo')->addValues([3])
 ]);
 
 //Test adding data to table directly where data count is less than number of
@@ -25,8 +28,10 @@ $table->addValues([
     [7, 8, 9] //When data count is greater than column count, extra data is discarded and exception thrown
 ]);
 
+array_push($tables, $table);
+
 //Use the Facade to create a PhpSpreadsheet
-$spreadsheet = (new SpreadsheetTableFacade($table))->export();
+$spreadsheet = (new SpreadsheetTableFacade($tables))->export();
 
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);

@@ -8,20 +8,20 @@ trait AnchorableTrait
      *            for all sheet placement calculations with respect to the table
      *            cell.
      */
-    private $cellAnchor = (object) array (
+    private $cellAnchor = [
         'column' => NULL,
         'row' => NULL
-    );
+    ];
 
     /**
      * @var array Dimensions are measured in sheet cells. Given non-unity width
      *            and height, sheet cells surrounding the anchor cell are merged
      *            to create a single cell.
      */
-    private $cellDimensions = (object) array (
+    private $cellDimensions = [
         'width' => 1,
         'height' => 1
-    );
+    ];
 
     /**
      * @return int
@@ -46,14 +46,14 @@ trait AnchorableTrait
      *
      * @throws UnanchoredException
      */
-    public function getLowerRightCell() : \stdClass
+    public function getLowerRightCell() : object
     {
         if(!$this->isAnchored())
             throw new UnanchoredException();
 
         if ($this->cellDimensions->width == 1 &&
             $this->cellDimensions->height == 1)
-            return $this->cellAnchor;
+            return (object) $this->cellAnchor;
         else {
             return (object) array(
                 'column' => $this->cellAnchor->column + (--$this->cellDimensions->width),
@@ -69,7 +69,7 @@ trait AnchorableTrait
      *
      * @throws InvalidTableCellDimensionException
      */
-    public function setSheetCellWidth(int $cellWidth) : TableEntityInterface
+    public function setSheetCellWidth(int $cellWidth)
     {
         if($cellWidth <= 0)
             throw new InvalidTableCellDimensionException('Width', $cellWidth);
@@ -86,7 +86,7 @@ trait AnchorableTrait
      *
      * @throws InvalidTableCellDimensionException
      */
-    public function setSheetCellHeight(int $cellHeight) : TableEntityInterface
+    public function setSheetCellHeight(int $cellHeight)
     {
         if($cellHeight <= 0)
             throw new InvalidTableCellDimensionException('Height', $cellHeight);
@@ -106,7 +106,7 @@ trait AnchorableTrait
      * @return TableEntityInterface
      * @throws InvalidSheetCellAddressException
      */
-    public function anchor(string $cellColumn, int $cellRow) : TableEntityInterface
+    public function anchor(string $cellColumn, int $cellRow)
     {
         if (Utility::validSheetCell($cellColumn, $cellRow)){
             $this->cellAnchor->column = $cellColumn;

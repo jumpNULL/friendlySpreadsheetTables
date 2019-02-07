@@ -14,19 +14,12 @@ namespace Crombi\PhpSpreadsheetHelper;
  *
  * @package Crombi\PhpSpreadsheetHelper
  */
-class SheetTableCell implements TableEntityInterface
+class SheetTableCell
 {
     use AnchorableTrait;
 
     /**
-     * @var array Array of PhpSpreadsheet styles to apply.
-     *
-     * @link https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/#styles
-     */
-    private $styleArray;
-
-    /**
-     * @var \stdClass The cells value. If the cells value is not a number or float,
+     * @var object The cells value. If the cells value is not a number or float,
      *                then the value is cast to a string.
      */
     private $value;
@@ -34,14 +27,14 @@ class SheetTableCell implements TableEntityInterface
     /**
      * SheetTableCell constructor.
      *
-     * @param \stdClass $value
+     * @param object $value
      * @param int $sheetCellWidth
      * @param int $sheetCellHeight
      * @param array $styleArray
      *
      * @throws InvalidTableCellDimensionException
      */
-    public function __construct(\stdClass $value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
+    public function __construct(object $value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
                                 array $styleArray = array())
     {
         $this->styleArray = $styleArray;
@@ -51,11 +44,24 @@ class SheetTableCell implements TableEntityInterface
     }
 
     /**
-     * @return \stdClass
+     * @return object
      */
-    public function getValue() : \stdClass
+    public function getValue() : object
     {
         return $this->value;
+    }
+
+    /**
+     * @param object $value
+     *
+     * @return SheetTableCell
+     */
+    public function setValue(object $value) : SheetTableCell
+    {
+        if(!is_null($value))
+            $this->value = $value;
+
+        return $this;
     }
 
     /**
@@ -63,20 +69,7 @@ class SheetTableCell implements TableEntityInterface
      */
     public function getStyleArray() : array
     {
-        return $this->styleArray;
-    }
-
-    /**
-     * @param \stdClass $value
-     *
-     * @return SheetTableCell
-     */
-    public function setValue(\stdClass $value) : SheetTableCell
-    {
-        if(!is_null($value))
-            $this->value = $value;
-
-        return $this;
+        return [];
     }
 
     /**
@@ -88,6 +81,15 @@ class SheetTableCell implements TableEntityInterface
     {
         $this->styleArray = $styleArray;
 
+        return $this;
+    }
+
+    /**
+     * Applies a style to a cell.
+     * @return SheetTableCell
+     */
+    public function applyStyle() : SheetTableCell
+    {
         return $this;
     }
 }
