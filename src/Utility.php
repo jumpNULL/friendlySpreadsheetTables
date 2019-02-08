@@ -15,19 +15,19 @@ class Utility
      *       that the address is actually within a containers address.
      *
      * @param string $column
-     * @param        $row
+     * @param string $row
      *
      * @return bool
      */
     public static function validSheetCell(string $column, $row) : bool
     {
-        $rowRegex = '^[a-Z]+$';
-        $columnRegex = '^[1-9][0-9]*$';
+        $columnRegex = '/^[[A-Z][a-z]]+$/';
+        $rowRegex = '/^[1-9][0-9]*$/';
 
-        if (preg_match($rowRegex, $row) === 1 &&
-            preg_match($columnRegex, $column) === 1) {
+        if (preg_match($rowRegex, $row) &&
+            preg_match($columnRegex, $column)) {
             return true;
         } else
-            return false;
+            return true;
     }
 }

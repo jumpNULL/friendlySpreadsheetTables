@@ -22,9 +22,6 @@ use mysql_xdevapi\Exception;
  */
 class SheetTableColumn extends AnchorableEntity
 {
-
-    use LabeledTrait;
-
     private $cellWidth;
 
     /**
@@ -40,17 +37,24 @@ class SheetTableColumn extends AnchorableEntity
     /**
      * SheetTableColumn constructor.
      *
-     * @param array          $values
+     * @param array       $values
+     * @param int         $width
      * @param object|NULL $headerValue
+     * @param array       $headerStyleArray
      * @param object|NULL $footerValue
-     * @param array          $footerStyleArray
-     * @param array          $headerStyleArray
+     * @param array       $footerStyleArray
+     *
+     * @throws InvalidTableCellDimensionException
+     * @throws TableColumnWidthLocked
      */
     public function __construct(array $values = array(), int $width = -1, object $headerValue = NULL,
                                 array $headerStyleArray = array(), object $footerValue = NULL,
                                 array $footerStyleArray = array() )
     {
         parent::__construct();
+
+        $this->lockedWidth = false;
+        $this->sheetCells = array();
 
         //We need a width if we are going to be adding in headers and footers
         if($width > 0)
@@ -59,13 +63,12 @@ class SheetTableColumn extends AnchorableEntity
             $this->setSheetCellWidth(1);
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
-        $this->lockedWidth = false;
-        $this->sheetCells = array();
         $this->setHeader($headerValue);
         $this->setHeaderStyleArray($headerStyleArray);
+        $this->addValues($values);
         $this->setFooter($footerValue);
         $this->setFooterStyleArray($footerStyleArray);
-        $this->addValues($values);
+
 
 
     }
@@ -83,8 +86,11 @@ class SheetTableColumn extends AnchorableEntity
         return $this->lockedWidth;
     }
 
-    //Updates anchor cell for all child table cells.
-    public function resolveAddresses()
+    /**
+     * @inheritdoc
+     * @return mixed|void
+     */
+    protected function resolveAddresses()
     {
         $cellColumn = $this->cellAnchor->column;
         $cellRow = $this->cellAnchor->row;
@@ -127,13 +133,15 @@ class SheetTableColumn extends AnchorableEntity
      *
      * @return SheetTableColumn
      */
-    public function setHeader(?object $headerValue) : SheetTableColumn
+    public function setHeader($headerValue) : SheetTableColumn
     {
         $headerCell = NULL;
 
         try {
-            if(!is_null($headerValue))
+            if(!is_null($headerValue)) {
                 $headerCell = new SheetTableCell($headerValue, $this->getSheetCellWidth());
+                $this->lockWidth();
+            }
         } catch (\Exception $e) {
             //Width exception should never occur, as if it does, it will occur
             //when setting the columns width
@@ -145,18 +153,20 @@ class SheetTableColumn extends AnchorableEntity
     }
 
     /**
-     * @param object|NULL $footerValue Sets footer to given value. If header
-     *                                    value is NULL, footer is removed.
+     * @param $footerValue Sets footer to given value. If header
+     *                     value is NULL, footer is removed.
      *
      * @return SheetTableColumn
      */
-    public function setFooter(?object $footerValue) : SheetTableColumn
+    public function setFooter($footerValue) : SheetTableColumn
     {
         $footerCell = NULL;
 
         try {
-            if(!is_null($footerValue))
+            if(!is_null($footerValue)) {
                 $footerCell = new SheetTableCell($footerValue, $this->getSheetCellWidth());
+                $this->lockWidth();
+            }
         } catch (\Exception $e) {
             //Width exception should never occur, as if it does, it will occur
             //when setting the columns width
@@ -176,10 +186,10 @@ class SheetTableColumn extends AnchorableEntity
     {
         foreach ($values as $value)
         {
-            $this->lockedWidth = true;
+            $this->lockWidth();
 
             try {
-                $sheetTableCell = new SheetTableCell((object) $value, $this->getSheetCellWidth());
+                $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
             } catch (\Exception $e) {
                 continue;
             }
@@ -247,11 +257,47 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function getSheetCellHeight(): int
     {
+        $cells = $this->getCells();
         //Note that the height of a column is not equal to the number of cells multiplied
         //by a fixed height because each cell may have different size.
-        return array_reduce($this->sheetCells, function (int $sum, SheetTableCell $cell) {
+        return array_reduce($cells, function (int $sum, SheetTableCell $cell) {
             return $sum + $cell->getSheetCellHeight();
-    });
+        }, 0);
+    }
+
+    /**
+     * Locks the columns width, preventing it from being altered further.
+     */
+    public function lockWidth() : void
+    {
+        $this->lockedWidth = true;
+    }
+
+    /**
+     * Returns the array of cells associated with this column.
+     *
+     * ___WARNING__: DO NOT RELY ON THIS CLASS EXPOSING ITS UNDERLYING TableSheetCells.
+     *
+     * @todo This is a patch added on the fly. Exposing TableSheetCells is leaky
+     *       design and a bad idea, as it opens up a whole host of edge cases
+     *       where cell anchors and dimensions are edited _after_ being added
+     *       to the container.
+     *
+     * @return array|null
+     */
+    public function getCells() : ?array
+    {
+        $cellArray = $this->sheetCells;
+
+        if (!is_null($this->header)){
+            $cellArray = array_merge([$this->header], $cellArray);
+        }
+
+        if(!is_null($this->footer)){
+            $cellArray = array_merge($cellArray, [$this->footer]);
+        }
+
+        return $cellArray;
     }
 
     /**
@@ -271,17 +317,4 @@ class SheetTableColumn extends AnchorableEntity
     {
         return $this->styleArray;
     }
-
-    /**
-     * Applying a style to a column applies its style to every cell it contains.
-     * It is important to note, however, that a cells style takes priority over
-     * a columns style.
-     *
-     * @return SheetTableColumn
-     */
-    public function applyStyle() : SheetTableColumn
-    {
-        return $this;
-    }
-
 }

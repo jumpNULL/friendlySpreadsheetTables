@@ -16,7 +16,6 @@ namespace Crombi\PhpSpreadsheetHelper;
  */
 class SheetTableCell extends AnchorableEntity
 {
-    use labeledTrait;
     /**
      * @var object The cells value. If the cells value is not a number or float,
      *                then the value is cast to a string.
@@ -33,7 +32,7 @@ class SheetTableCell extends AnchorableEntity
      *
      * @throws InvalidTableCellDimensionException
      */
-    public function __construct(object $value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
+    public function __construct($value, int $sheetCellWidth = 1, int $sheetCellHeight = 1,
                                 array $styleArray = array())
     {
         parent::__construct();
@@ -46,7 +45,7 @@ class SheetTableCell extends AnchorableEntity
     /**
      * @return object
      */
-    public function getValue() : object
+    public function getValue()
     {
         return $this->value;
     }
@@ -56,7 +55,7 @@ class SheetTableCell extends AnchorableEntity
      *
      * @return SheetTableCell
      */
-    public function setValue(object $value) : SheetTableCell
+    public function setValue($value) : SheetTableCell
     {
         if(!is_null($value))
             $this->value = $value;
@@ -81,15 +80,6 @@ class SheetTableCell extends AnchorableEntity
     {
         $this->styleArray = $styleArray;
 
-        return $this;
-    }
-
-    /**
-     * Applies a style to a cell.
-     * @return SheetTableCell
-     */
-    public function applyStyle() : SheetTableCell
-    {
         return $this;
     }
 

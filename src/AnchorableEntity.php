@@ -36,8 +36,8 @@ abstract class AnchorableEntity
      *
      * @return mixed
      */
-
     abstract protected function resolveAddresses();
+
     /**
      * @return int
      */
@@ -61,22 +61,15 @@ abstract class AnchorableEntity
      *
      * @throws UnanchoredException
      */
-    public function getLowerRightCell() : object
+    public function getLowerRightCellAddress() : string
     {
-        if(!$this->isAnchored())
-            throw new UnanchoredException();
-
         if ($this->getSheetCellWidth() == 1 &&
             $this->getSheetCellHeight() == 1)
-            return (object) $this->cellAnchor;
+            return $this->getAnchorAddress();
         else {
-            $width = $this->getSheetCellWidth();
-            $height = $this->getSheetCellHeight();
-
-            return (object) array(
-                'column' => $this->cellAnchor->column + --$width,
-                'row' => $this->cellAnchor->row + --$height
-            );
+             $lowerRightCell = $this->getLowerRightCell();
+            //TODO: This will break if the column string is not a simple character.
+            return $lowerRightCell->row . strval($lowerRightCell->column);
         }
     }
 
@@ -127,7 +120,7 @@ abstract class AnchorableEntity
     public function anchor(string $cellColumn, int $cellRow)
     {
         if (Utility::validSheetCell($cellColumn, $cellRow)){
-            $this->cellAnchor->height = $cellColumn;
+            $this->cellAnchor->column = $cellColumn;
             $this->cellAnchor->row   = $cellRow;
             $this->resolveAddresses();
         } else
@@ -138,13 +131,55 @@ abstract class AnchorableEntity
     }
 
     /**
+     * @return string|NULL
+     */
+    public function getAnchorAddress() : string
+    {
+        if (!is_null($this->cellAnchor)) {
+            return $this->cellAnchor->column . $this->cellAnchor->row;
+        } else
+            return NULL;
+    }
+
+    /**
+     * @return object
+     */
+    public function getAnchor() : object
+    {
+        return clone $this->cellAnchor;
+    }
+
+    public function getLowerRightCell() : object
+    {
+        if(!$this->isAnchored())
+            throw new UnanchoredException();
+
+        if ($this->getSheetCellWidth() == 1 &&
+            $this->getSheetCellHeight() == 1)
+            return (object) $this->cellAnchor;
+        else {
+            $width = $this->getSheetCellWidth();
+            $height = $this->getSheetCellHeight();
+
+            $cellColumn = $this->cellAnchor->column;
+            for (; $width > 1; $cellColumn++, $width--) ;
+
+            $cellRow = $this->cellAnchor->row + --$height;
+
+            return (object) array(
+                'column' => $cellColumn,
+                'row' => $cellRow
+            );
+        }
+    }
+    /**
      * Returns whether a table element has been anchored to a sheet cell.
      *
      * @return bool
      */
     public function isAnchored() : bool
     {
-        if (is_null($this->cellAnchor->width) || is_null($this->cellAnchor->height))
+        if (is_null($this->cellAnchor->column) || is_null($this->cellAnchor->row))
             return false;
         else
             return true;

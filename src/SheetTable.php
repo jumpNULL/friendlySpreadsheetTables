@@ -38,7 +38,7 @@ class SheetTable extends AnchorableEntity
 {
 
     /**
-     * @var array $column Map from column names to column configuration.
+     * @var array $tableElements
      */
     private $tableElements;
     private $header;
@@ -55,6 +55,7 @@ class SheetTable extends AnchorableEntity
     public function __construct()
     {
         parent::__construct();
+        $this->tableElements = array();
     }
 
     /**
@@ -63,10 +64,12 @@ class SheetTable extends AnchorableEntity
      * @param AnchorableEntity[] $tableEntities
      * @return SheetTable
      */
-    public function addColumns(AnchorableEntity ...$tableEntities) : SheetTable
+    public function addElements(AnchorableEntity ...$tableEntities) : SheetTable
     {
-        if(!is_null($tableEntities))
-            array_merge($this->tableElements, $tableEntities);
+        foreach($tableEntities as $entity){
+            if(!is_null($tableEntities))
+                array_merge($this->tableElements, $tableEntities);
+        }
 
         return $this;
     }
@@ -74,25 +77,25 @@ class SheetTable extends AnchorableEntity
     /**
      * @inheritdoc
      */
-    public function resolveAddresses()
+    protected function resolveAddresses()
     {
-        $cellColumn = $this->cellAnchor->column;
-        $cellRow = $this->cellAnchor->row;
+        $tableColumn = $this->cellAnchor->column;
+        $tableRow = $this->cellAnchor->row;
 
         //header cell comes first
         if(!is_null($this->header)) {
-            $this->header->anchor($cellColumn, $cellRow);
-            $cellRow += $this->header->getSheetCellWidth();
+            $this->header->anchor($tableColumn, $tableRow);
+            $tableRow += $this->header->getSheetCellWidth();
         }
 
-        foreach ($this->tableElements as $cell) {
-            $cell->anchor($cellColumn, $cellRow);
-            $cellRow += $cell->getSheetCellWidth();
+        foreach ($this->tableElements as $element) {
+            $element->anchor($tableColumn, $tableRow);
+            $tableRow += $element->getSheetCellWidth();
         }
 
         //footer cell comes last
         if(!is_null($this->footer))
-            $this->footer->anchor($cellColumn, $cellRow);
+            $this->footer->anchor($tableColumn, $tableRow);
     }
 
     /**
@@ -104,6 +107,23 @@ class SheetTable extends AnchorableEntity
     public function addValues(array ...$value) : SheetTable
     {
         return $this;
+    }
+
+    /**
+     * Returns the array of elements associated with this table.
+     *
+     * ___WARNING__: DO NOT RELY ON THIS CLASS EXPOSING ITS UNDERLYING ELEMENTS.
+     *
+     * @todo This is a patch added on the fly. Exposing TableSheetColumns is leaky
+     *       design and a bad idea, as it opens up a whole host of edge cases
+     *       where cell anchors and dimensions are edited _after_ being added
+     *       to the container.
+     *
+     * @return array|null
+     */
+    public function getElements() : array
+    {
+
     }
 
     public function isRectangularTable() : bool
@@ -118,6 +138,21 @@ class SheetTable extends AnchorableEntity
         return $this;
     }
 
+    public function getHeader() : ?SheetTableCell
+    {
+        if(is_null($this->header))
+            return NULL;
+
+        return clone $this->header;
+    }
+
+    public function getFooter() : ?SheetTableCell
+    {
+        if(is_null($this->header))
+            return NULL;
+
+        return clone $this->footer;
+    }
     /**
      * Sets the tables style. A tables style applies to all elements it contains.
      * It is important however to note, however, that an elements style takes
@@ -140,17 +175,5 @@ class SheetTable extends AnchorableEntity
     public function getStyleArray () : array
     {
         return $this->styleArray;
-    }
-
-    /**
-     * Applying a style to a column applies its style to every cell it contains.
-     * It is important to note, however, that a cells style takes priority over
-     * a columns style.
-     *
-     * @return SheetTable
-     */
-    public function applyStyle() : SheetTable
-    {
-        return $this;
     }
 }
