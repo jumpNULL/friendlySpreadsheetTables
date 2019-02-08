@@ -36,7 +36,7 @@ class SheetTableCell extends AnchorableEntity
                                 array $styleArray = array())
     {
         parent::__construct();
-        $this->styleArray = $styleArray;
+        $this->setStyleArray($styleArray);
         $this->setSheetCellHeight($sheetCellHeight);
         $this->setSheetCellWidth($sheetCellWidth);
         $this->setValue($value);

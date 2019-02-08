@@ -55,6 +55,7 @@ class SheetTable extends AnchorableEntity
     public function __construct()
     {
         parent::__construct();
+        $this->setStyleArray([]);
         $this->tableElements = array();
     }
 
@@ -68,7 +69,7 @@ class SheetTable extends AnchorableEntity
     {
         foreach($tableEntities as $entity){
             if(!is_null($tableEntities))
-                array_merge($this->tableElements, $tableEntities);
+                array_push($this->tableElements, $entity);
         }
 
         return $this;
@@ -79,23 +80,71 @@ class SheetTable extends AnchorableEntity
      */
     protected function resolveAddresses()
     {
-        $tableColumn = $this->cellAnchor->column;
-        $tableRow = $this->cellAnchor->row;
+        $tableColumn = $this->getAnchor()->column;
+        $tableRow = $this->getAnchor()->row;
 
         //header cell comes first
         if(!is_null($this->header)) {
             $this->header->anchor($tableColumn, $tableRow);
-            $tableRow += $this->header->getSheetCellWidth();
+            $tableRow += $this->getSheetCellHeight();
         }
 
         foreach ($this->tableElements as $element) {
             $element->anchor($tableColumn, $tableRow);
-            $tableRow += $element->getSheetCellWidth();
+            for ($width = $element->getSheetCellWidth(); $width >= 1; $tableColumn++, $width--);
         }
 
+        $lowestRow = $this->getLowerRightCell()->row;
         //footer cell comes last
         if(!is_null($this->footer))
-            $this->footer->anchor($tableColumn, $tableRow);
+            $this->footer->anchor($this->getAnchor()->column, ++$lowestRow);
+    }
+
+
+    /**
+     * @param object|NULL $headerValue Sets header to given value. If header value
+     *                               is NULL, header is removed.
+     *
+     * @return SheetTableColumn
+     */
+    public function setHeader($headerValue) : SheetTable
+    {
+        $headerCell = $this->header;
+
+        try {
+            if(!is_null($headerValue)) {
+                $headerCell = new SheetTableCell($headerValue, $this->getSheetCellWidth());
+            }
+        } catch (\Exception $e) {
+            //Width exception should never occur, as if it does, it will occur
+            //when setting the columns width
+        }
+        $this->header = $headerCell;
+
+        return $this;
+    }
+
+    /**
+     * @param $footerValue Sets footer to given value. If header
+     *                     value is NULL, footer is removed.
+     *
+     * @return SheetTableColumn
+     */
+    public function setFooter($footerValue) : SheetTable
+    {
+        $footerCell = $this->footer;
+
+        try {
+            if(!is_null($footerValue)) {
+                $footerCell = new SheetTableCell($footerValue, $this->getSheetCellWidth());
+            }
+        } catch (\Exception $e) {
+            //Width exception should never occur, as if it does, it will occur
+            //when setting the columns width
+        }
+        $this->footer = $footerCell;
+
+        return $this;
     }
 
     /**
@@ -123,7 +172,7 @@ class SheetTable extends AnchorableEntity
      */
     public function getElements() : array
     {
-
+        return $this->tableElements;
     }
 
     public function isRectangularTable() : bool
@@ -175,5 +224,27 @@ class SheetTable extends AnchorableEntity
     public function getStyleArray () : array
     {
         return $this->styleArray;
+    }
+
+    public function getHeaderStyleArray() : array
+    {
+        return $this->getHeader()->getStyleArray();
+    }
+
+    public function getFooterStyleArray() : array
+    {
+        return $this->getFooter()->getStyleArray();
+    }
+
+    public function setHeaderStyleArray(array $styleArray) : SheetTable
+    {
+        $this->getHeader()->setStyleArray($styleArray);
+        return $this;
+    }
+
+    public function setFooterStyleArray(array $styleArray) : SheetTable
+    {
+        $this->getFooter()->setStyleArray($styleArray);
+        return $this;
     }
 }

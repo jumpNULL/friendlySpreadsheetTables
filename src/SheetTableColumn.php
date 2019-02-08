@@ -22,8 +22,6 @@ use mysql_xdevapi\Exception;
  */
 class SheetTableColumn extends AnchorableEntity
 {
-    private $cellWidth;
-
     /**
      * @var bool Prevents the cell width of a column being updated once a
      *           value has been added.
@@ -39,37 +37,26 @@ class SheetTableColumn extends AnchorableEntity
      *
      * @param array       $values
      * @param int         $width
-     * @param object|NULL $headerValue
-     * @param array       $headerStyleArray
      * @param object|NULL $footerValue
-     * @param array       $footerStyleArray
      *
      * @throws InvalidTableCellDimensionException
      * @throws TableColumnWidthLocked
      */
-    public function __construct(array $values = array(), int $width = -1, object $headerValue = NULL,
-                                array $headerStyleArray = array(), object $footerValue = NULL,
-                                array $footerStyleArray = array() )
+    public function __construct(array $values = array(), int $width = -1)
     {
         parent::__construct();
 
         $this->lockedWidth = false;
         $this->sheetCells = array();
-
+        $this->setStyleArray([]);
         //We need a width if we are going to be adding in headers and footers
         if($width > 0)
             $this->setSheetCellWidth($width);
-        elseif ($width === -1 && (!is_null($headerValue) || is_null($footerValue)))
+        else
             $this->setSheetCellWidth(1);
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
-        $this->setHeader($headerValue);
-        $this->setHeaderStyleArray($headerStyleArray);
         $this->addValues($values);
-        $this->setFooter($footerValue);
-        $this->setFooterStyleArray($footerStyleArray);
-
-
 
     }
 
@@ -98,12 +85,12 @@ class SheetTableColumn extends AnchorableEntity
         //header cell comes first
         if(!is_null($this->header)) {
             $this->header->anchor($cellColumn, $cellRow);
-            $cellRow += $this->header->getSheetCellWidth();
+            $cellRow += 1;
         }
 
         foreach ($this->sheetCells as $cell){
             $cell->anchor($cellColumn, $cellRow);
-            $cellRow += $cell->getSheetCellWidth();
+            $cellRow += 1;
         }
 
         //footer cell comes last
@@ -135,7 +122,7 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function setHeader($headerValue) : SheetTableColumn
     {
-        $headerCell = NULL;
+        $headerCell = $this->header;
 
         try {
             if(!is_null($headerValue)) {
@@ -160,7 +147,7 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function setFooter($footerValue) : SheetTableColumn
     {
-        $footerCell = NULL;
+        $footerCell = $this->footer;
 
         try {
             if(!is_null($footerValue)) {
@@ -313,8 +300,4 @@ class SheetTableColumn extends AnchorableEntity
         return $this;
     }
 
-    public function getStyleArray () : array
-    {
-        return $this->styleArray;
-    }
 }

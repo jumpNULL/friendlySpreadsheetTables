@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace Crombi\PhpSpreadsheetHelper;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -13,15 +14,15 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  *
  * **NOTE**: This class is _tightly_ coupled to the PHPSpreadsheet library.
  *
- * @todo Equations are currently not supported and must be added after building.
+ * @todo    Equations are currently not supported and must be added after building.
  *    Add support for alignment by separators in tuple values, header and footer.
  *
- * @todo As a possible performance improvement point consider Settings::setCache()
+ * @todo    As a possible performance improvement point consider Settings::setCache()
  *       which expects a Psr compatible Cache implementation.
  *
- * @todo Refactor entire render part.
+ * @todo    Refactor entire render part.
  *
- * @link https://phpspreadsheet.readthedocs.io/en/develop/ PHPSpreadsheet Documentation
+ * @link    https://phpspreadsheet.readthedocs.io/en/develop/ PHPSpreadsheet Documentation
  *
  * @package Crombi\PhpSpreadsheetHelper
  */
@@ -35,90 +36,94 @@ class SpreadsheetTableFacade
      * @var
      */
     private $divisorFunction;
+    private $defaultHeaderStyle = [
+        'alignment' => [
+            'horizontal' =>  \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+        ],
+        'font' => [
+            'bold' => true
+        ],
+        'fill' => [
+            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            'color' => 'cecece'
+        ]
+    ];
+    private $defaultFooterStyle = [];
 
-    public function __construct(Worksheet $sheet, array $tables = array(), $anchorColumn = 'A', $anchorRow = 1)
+    public function __construct(Worksheet $sheet, $anchorColumn = 'A', $anchorRow = 1)
     {
-        if(!Utility::validSheetCell($anchorColumn, $anchorRow))
-            throw new InvalidSheetCellAddressException($anchorColumn .
-                strval($anchorRow));
-
-        $this->sheet =  $sheet;
-
-        $this->anchorCell = (object) [
-          'column' => $anchorColumn,
-          'row' => $anchorRow
-        ];
-
+        if (!Utility::validSheetCell($anchorColumn, $anchorRow)) throw new InvalidSheetCellAddressException($anchorColumn . strval($anchorRow));
+        $this->sheet = $sheet;
+        $this->anchorCell = (object)['column' => $anchorColumn, 'row' => $anchorRow];
         $this->tables = array();
-        $this->addTables($tables);
     }
 
-    /**
-     * @return Worksheet
-     */
-    public function export () : Worksheet
+    public function export() : SpreadsheetTableFacade
     {
         $firstTable = true;
         $anchorCell = clone $this->anchorCell;
-
-        foreach($this->tables as $table) {
-            if(!$firstTable) {
+        foreach ($this->tables as $table) {
+            if (!$firstTable) {
+                //TODO: Separator logic
                 //render separator
             }
-
             $table->anchor($anchorCell->column, $anchorCell->row);
+            $this->renderTable($table);
+            //update point
+            $lowerRightCell = $table->getLowerRightCell();
+            $anchorCell->row = $lowerRightCell->row++;
+            $firstTable=false;
+        }
 
-            //render title
-            $rightCell = $table->getLowerRightCell();
-            $rightCell->row = $anchorCell->row;
+        return $this;
+    }
 
+    /**
+     * @param SheetTable $table
+     *
+     * @return Worksheet
+     * @throws InvalidSheetCellAddressException
+     * @throws UnanchoredException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    public function renderTable(SheetTable $table): Worksheet
+    {
+        $anchorCell = $table->getAnchor();
+        $rightCell = $table->getLowerRightCell();
+        //render title
+        if ($table->getHeader() !== NULL) {
             if ($table->getSheetCellWidth() > 1) {
                 try {
-                   $this->sheet->mergeCells($table->getAnchorAddress()
-                        . ':' . $rightCell->column . $rightCell->row);
+                    $this->sheet->mergeCells($table->getAnchorAddress() . ':' . $rightCell->column . $anchorCell->row);
                 } catch (\Exception $e) {
                     throw $e;
                 };
             }
-
             $this->renderCell($table->getHeader());
+        }
 
-            //apply style over range
-            $this->sheet->getStyle()->applyFromArray($table->getStyleArray());
+        //apply style over range
+        $this->sheet->getStyle($table->getAnchorAddress() . ':' . $table->getLowerRightCellAddress())->applyFromArray($table->getStyleArray());
+        //render sub-elements
+        foreach ($table->getElements() as $entity) {
+            if (is_a($entity, SheetTableColumn::class)) {
+                $this->renderColumn($entity);
+            } elseif (is_a($entity, SheetTable::class))
+                $this->renderTable($entity);
+        }
 
-            //render sub-elements
-            foreach($table->getElements() as $entity){
-                var_dump($entity);
-                die();
-                switch(gettype($entity)){
-                    case 'l':
-                        renderColumn();
-                        break;
-                    case 'a':
-                        renderTable();
-                        break;
-                    default:
-                        break;
-                }
-            }
-
+        if ($table->getFooter() !== NULL) {
             //render footer
             $rightCell = $table->getLowerRightCell();
-            $rightCell->row = $anchorCell->row;
-
+            $rightCell->row = $table->getAnchor()->row;
             if ($table->getSheetCellWidth() > 1) {
                 try {
-                    $this->sheet->mergeCells($table->getAnchorAddress()
-                        . ':' . $rightCell->column . $rightCell->row);
+                    $this->sheet->mergeCells($table->getAnchorAddress() . ':' . $rightCell->column . $rightCell->row);
                 } catch (\Exception $e) {
                     throw $e;
                 };
             }
             $this->renderCell($table->getFooter());
-
-            //update point
-            $lowerRightCell = $table->getLowerRightCell();
-            $anchorCell->row = $lowerRightCell->row++;
         }
 
         return $this->sheet;
@@ -132,27 +137,27 @@ class SpreadsheetTableFacade
      * @throws UnanchoredException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function renderColumn (SheetTableColumn $column) : SpreadsheetTableFacade
+    public function renderColumn(SheetTableColumn $column): SpreadsheetTableFacade
     {
-
-        $column->anchor($this->anchorCell->column, $this->anchorCell->row);
-
         if ($column->getSheetCellWidth() > 1) {
-            try {
-                $this->sheet->mergeCells($column->getAnchorAddress()
-                    . ':' . $column->getLowerRightCellAddress());
-            } catch (\Exception $e) {
-                throw $e;
-            };
+            for ($currentRow = $column->getAnchor()->row,
+                 $anchorColumn = $column->getAnchor()->column,
+                 $rightMostCell = $column->getLowerRightCell();
+                 $currentRow <=  $rightMostCell->row; $currentRow++) {
+                try {
+                    $this->sheet->mergeCells($anchorColumn . $currentRow .
+                    ':' . $rightMostCell->column . $currentRow);
+                    $this->sheet->getStyle($anchorColumn.$currentRow)->applyFromArray($column->getHeader()-);
+                } catch (\Exception $e) {
+                    throw $e;
+                };
+            }
         }
 
-            $this->sheet->getStyle($column->getAnchorAddress()
-                . ':' . $column->getLowerRightCellAddress());
-
-        foreach($column->getCells() as $cell) {
-                $this->renderCell($cell);
+        $this->sheet->getStyle($column->getAnchorAddress() . ':' . $column->getLowerRightCellAddress());
+        foreach ($column->getCells() as $cell) {
+            $this->renderCell($cell);
         }
-
         return $this;
     }
 
@@ -166,20 +171,17 @@ class SpreadsheetTableFacade
      *
      * @return Worksheet
      */
-    protected function renderCell (SheetTableCell $cell) : SpreadsheetTableFacade
+    protected function renderCell(SheetTableCell $cell): SpreadsheetTableFacade
     {
         //Pre-condition: cell->anchor() was successfully called (getAnchorAddress() !== NULL)
         //               $sheet->merge() on range was already called
         try {
             $sheetCell = $this->sheet->getCell($cell->getAnchorAddress());
-            $value = $cell->getValue();
-            var_dump($value);
-            $sheetCell->setValue($value);
+            $sheetCell->setValue($cell->getValue());
             $sheetCell->getStyle()->applyFromArray($cell->getStyleArray());
         } catch (\Exception $e) {
             throw $e;
-       }
-
+        }
         return $this;
     }
 
@@ -191,13 +193,11 @@ class SpreadsheetTableFacade
      *
      * @return SpreadsheetTableFacade
      */
-    public function addTables(array $tables) : SpreadsheetTableFacade
+    public function addTables(SheetTable ...$tables): SpreadsheetTableFacade
     {
-        foreach($tables as $table) {
-            if (!is_null($table) && is_object($table))
-                array_push($this->tables, $table);
+        foreach ($tables as $table) {
+            if (!is_null($table) && is_object($table)) array_push($this->tables, $table);
         }
-
         return $this;
     }
 
@@ -208,17 +208,16 @@ class SpreadsheetTableFacade
      *
      * @return SpreadsheetTableFacade
      */
-    public function setDivisorFunction(callable $divisorFunction) : SpreadsheetTableFacade
+    public function setDivisorFunction(callable $divisorFunction): SpreadsheetTableFacade
     {
         $this->divisorFunction = $divisorFunction;
-
         return $this;
     }
 
     /**
      * @return callable
      */
-    public function getDivisorFunction() : callable
+    public function getDivisorFunction(): callable
     {
         return $this->divisorFunction;
     }

@@ -69,7 +69,7 @@ abstract class AnchorableEntity
         else {
              $lowerRightCell = $this->getLowerRightCell();
             //TODO: This will break if the column string is not a simple character.
-            return $lowerRightCell->row . strval($lowerRightCell->column);
+            return $lowerRightCell->column . strval($lowerRightCell->row);
         }
     }
 
@@ -156,7 +156,7 @@ abstract class AnchorableEntity
 
         if ($this->getSheetCellWidth() == 1 &&
             $this->getSheetCellHeight() == 1)
-            return (object) $this->cellAnchor;
+            return clone $this->cellAnchor;
         else {
             $width = $this->getSheetCellWidth();
             $height = $this->getSheetCellHeight();

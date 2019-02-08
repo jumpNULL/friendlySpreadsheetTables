@@ -8,18 +8,15 @@ use \Crombi\PhpSpreadsheetHelper\SheetTableColumn;
 use \PhpOffice\PhpSpreadsheet\Writer\Xls;
 use \PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-//Collection of tables to add
-$tables = array();
-
 //Create SheetTable Model
 $table = new SheetTable();
 
 //Test variable width columns with mismatched data amount and building table out
 //from the pre-populated columns
 $table->addElements(
-    (new SheetTableColumn([], 2))->setHeader('ColumnOne')->addValues([1,2])->setFooter(1+2),
-    (new SheetTableColumn())->setHeader('ColumnTwo')->addValues([3])
-);
+    (new SheetTableColumn([], 2))->setHeader('ColumnOne')->addValues([1,2])->setFooter(1+2)
+   //, (new SheetTableColumn())->setHeader('ColumnTwo')->addValues([3])
+)->setHeader('Test Table')->setFooter('Test Footer');
 
 //Test adding data to table directly where data count is less than number of
 //columns, equal to number of columns, and greater than number of columns
@@ -29,13 +26,13 @@ $table->addValues([
     [7, 8, 9] //When data count is greater than column count, extra data is discarded and exception thrown
 ]);
 
-array_push($tables, $table);
 
 //Use the Facade to create a PhpSpreadsheet
 $spreadsheet = new SpreadSheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 
-$facade->addTables($tables)->export();
+$facade->addTables($table)->export();
+var_dump($table->getElements());
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);
 $writer->save("test.xls");

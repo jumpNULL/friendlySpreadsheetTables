@@ -8,10 +8,20 @@ use \PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
-$column = new SheetTableColumn();
+$column = new SheetTableColumn([], 2);
+$columnTwo = new SheetTableColumn();
 
-$column->addValues(['1', 2, 3])->setHeader('Test header')->setFooter('Test Footer');
-$facade->renderColumn($column);
+$table = new \Crombi\PhpSpreadsheetHelper\SheetTable();
+$table->addElements($column, $columnTwo);
+
+$column->addValues([1, 2])->setHeader('ColumnOne')->setFooter(3+4);
+$columnTwo->addValues([3, 4])->setHeader('ColumnTwo')->setFooter('TestFooter');
+
+$table->setHeader('Test Table')->setFooter('Table Footer');
+
+$table->anchor('A', 1);
+
+$facade->renderTable($table);
 
 $writer = new Xls($spreadsheet);
 $writer->save("test.xls");
