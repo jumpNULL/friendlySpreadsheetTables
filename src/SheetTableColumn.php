@@ -23,6 +23,8 @@ use mysql_xdevapi\Exception;
 class SheetTableColumn extends AnchorableEntity
 {
 
+    use LabeledTrait;
+
     private $cellWidth;
 
     /**
@@ -44,20 +46,27 @@ class SheetTableColumn extends AnchorableEntity
      * @param array          $footerStyleArray
      * @param array          $headerStyleArray
      */
-    public function __construct(array $values = array(), object $headerValue = NULL,
+    public function __construct(array $values = array(), int $width = -1, object $headerValue = NULL,
                                 array $headerStyleArray = array(), object $footerValue = NULL,
                                 array $footerStyleArray = array() )
     {
         parent::__construct();
+
+        //We need a width if we are going to be adding in headers and footers
+        if($width > 0)
+            $this->setSheetCellWidth($width);
+        elseif ($width === -1 && (!is_null($headerValue) || is_null($footerValue)))
+            $this->setSheetCellWidth(1);
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
+        $this->lockedWidth = false;
         $this->sheetCells = array();
         $this->setHeader($headerValue);
         $this->setHeaderStyleArray($headerStyleArray);
         $this->setFooter($footerValue);
         $this->setFooterStyleArray($footerStyleArray);
         $this->addValues($values);
-        $this->lockedWidth = false;
+
 
     }
 

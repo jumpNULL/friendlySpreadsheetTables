@@ -16,7 +16,7 @@ namespace Crombi\PhpSpreadsheetHelper;
  */
 class SheetTableCell extends AnchorableEntity
 {
-
+    use labeledTrait;
     /**
      * @var object The cells value. If the cells value is not a number or float,
      *                then the value is cast to a string.

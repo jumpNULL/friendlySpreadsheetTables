@@ -40,8 +40,16 @@ class SheetTable extends AnchorableEntity
     /**
      * @var array $column Map from column names to column configuration.
      */
-    private $columns;
+    private $tableElements;
+    private $header;
+    private $footer;
     private $styleArray;
+
+    /**
+     * @var bool Specifies how a table will add new values. If the table is rectangular,
+     *            new elements are always appended to the table. If not, new values are appended
+     *            to the end of columns. This is similar in appearance to jagged arrays.
+     */
     private $isRectangularTable;
 
     public function __construct()
@@ -52,24 +60,39 @@ class SheetTable extends AnchorableEntity
     /**
      * Adds an ordered set of columns to the tables column ordered collection.
      *
-     * @param SheetTableColumn ...$columns Set of columns to insert into table.
-     *
+     * @param AnchorableEntity[] $tableEntities
      * @return SheetTable
      */
-    public function addColumns(SheetTableColumn ...$columns) : SheetTable
+    public function addColumns(AnchorableEntity ...$tableEntities) : SheetTable
     {
+        if(!is_null($tableEntities))
+            array_merge($this->tableElements, $tableEntities);
 
         return $this;
     }
 
-    public function addSubTables(SheetTable ...$tables) : SheetTable
-    {
-        return $this;
-    }
-
+    /**
+     * @inheritdoc
+     */
     public function resolveAddresses()
     {
-        // TODO: Implement resolveAddresses() method.
+        $cellColumn = $this->cellAnchor->column;
+        $cellRow = $this->cellAnchor->row;
+
+        //header cell comes first
+        if(!is_null($this->header)) {
+            $this->header->anchor($cellColumn, $cellRow);
+            $cellRow += $this->header->getSheetCellWidth();
+        }
+
+        foreach ($this->tableElements as $cell) {
+            $cell->anchor($cellColumn, $cellRow);
+            $cellRow += $cell->getSheetCellWidth();
+        }
+
+        //footer cell comes last
+        if(!is_null($this->footer))
+            $this->footer->anchor($cellColumn, $cellRow);
     }
 
     /**
