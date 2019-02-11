@@ -10,9 +10,13 @@ remember what cell represents what table entry.
     PhpSpreadSheet
 
 ### Installing
-Just run `composer install` to get the dependencies.
+Just run `composer install` to get the dependencies. If using a script don't
+forget to run `composer dumpautoload` and to add `require '../vendor/autoload.php';`
+before the `use` statements.
 
 ### Utilizing
+The project class namespace is `\Crombi\PhpSpreadsheetHelper`.
+
 Create the table model utilizing the Sheet* classes and then utilize the 
 SpreadsheetTableFacade to render/map conceptual table model to a
 PHPSpreadsheet worksheet.
