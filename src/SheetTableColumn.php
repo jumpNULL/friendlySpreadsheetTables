@@ -158,15 +158,15 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function addValues(...$values) : self
     {
-        foreach ($values as $value)
-        {
-            try {
-                $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
-            } catch (\Exception $e) {
-                continue;
+        foreach($values as $array) {
+            foreach ($array as $value) {
+                try {
+                    $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
+                } catch (\Exception $e) {
+                    continue;
+                }
+                $this->sheetCells[] = $sheetTableCell;
             }
-
-            $this->sheetCells[] = $sheetTableCell;
         }
         return $this;
     }

@@ -167,8 +167,22 @@ class SheetTable extends AnchorableEntity
      *
      * @return SheetTable
      */
-    public function addValues(array ...$value) : self
+    public function addValues(array ...$valueArrays) : self
     {
+        foreach($valueArrays as $array){
+            $index = 0;
+            for ($index = 0; $index < 3; $index++){
+                //if ($index < count($this->getElements())) {
+                if (isset($array[$index])) {
+                    $this->getElements()[$index]->addValues([$array[$index]]);
+                    //$index++;
+                }else{
+                    $this->getElements()[$index]->addValues(['']);
+                }
+
+            }
+        }
+
         return $this;
     }
 
