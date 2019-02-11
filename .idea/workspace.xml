@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed81f07e-1a83-45a5-a1db-d7cba5a7aa40" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/resumenMovCaja.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/movCajaPlainSpreadsheet.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AnchorableEntity.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AnchorableEntity.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SheetTable.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SheetTable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SheetTableColumn.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SheetTableColumn.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/exportSimpleTable.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/exportSimpleTable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test.xls" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test.xls" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/testColumns.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testColumns.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/resumenMovCaja.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/resumenMovCaja.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,31 +23,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/exportSimpleTable.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-              <folding>
-                <element signature="e#172#228#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SheetTableCell.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="131">
-              <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/testColumns.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="372">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="92">
+              <caret line="6" column="41" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -60,8 +34,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/resumenMovCaja.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
+            <state relative-caret-position="423">
+              <caret line="63" column="32" selection-start-line="63" selection-start-column="32" selection-end-line="63" selection-end-column="32" />
               <folding>
                 <element signature="e#41#85#0#PHP" expanded="true" />
               </folding>
@@ -72,17 +46,38 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SpreadsheetTableFacade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1824">
-              <caret line="84" column="46" selection-start-line="84" selection-start-column="46" selection-end-line="84" selection-end-column="46" />
+            <state relative-caret-position="1863">
+              <caret line="82" selection-start-line="82" selection-end-line="82" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SheetTableColumn.php">
+        <entry file="file://$PROJECT_DIR$/src/SheetTable.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1196">
-              <caret line="56" column="13" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
+            <state relative-caret-position="6992">
+              <caret line="304" column="42" selection-start-line="304" selection-start-column="42" selection-end-line="304" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tests/movCajaPlainSpreadsheet.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="538">
+              <caret line="43" selection-start-line="43" selection-end-line="43" />
+              <folding>
+                <element signature="e#7#49#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/AnchorableEntity.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1909">
+              <caret line="83" column="4" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -99,17 +94,18 @@
         <option value="$PROJECT_DIR$/src/InvalidSheetCellAddressException.php" />
         <option value="$PROJECT_DIR$/src/Utility.php" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.php" />
-        <option value="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" />
         <option value="$PROJECT_DIR$/tests/SimpleTableTest.php" />
-        <option value="$PROJECT_DIR$/tests/testColumns.php" />
-        <option value="$PROJECT_DIR$/src/SheetTable.php" />
         <option value="$PROJECT_DIR$/src/AnchorableEntity.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/tests/resumenMovCaja.php" />
         <option value="$PROJECT_DIR$/src/SheetTableCell.php" />
         <option value="$PROJECT_DIR$/tests/testAddElements.php" />
-        <option value="$PROJECT_DIR$/src/SheetTableColumn.php" />
         <option value="$PROJECT_DIR$/tests/exportSimpleTable.php" />
+        <option value="$PROJECT_DIR$/src/SheetTableColumn.php" />
+        <option value="$PROJECT_DIR$/tests/testColumns.php" />
+        <option value="$PROJECT_DIR$/tests/resumenMovCaja.php" />
+        <option value="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" />
+        <option value="$PROJECT_DIR$/src/SheetTable.php" />
+        <option value="$PROJECT_DIR$/tests/movCajaPlainSpreadsheet.php" />
       </list>
     </option>
   </component>
@@ -221,9 +217,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="PHP Script.resumenMovCaja.php" />
+        <item itemvalue="PHP Script.testColumns.php" />
         <item itemvalue="PHP Script.exportSimpleTable.php" />
         <item itemvalue="PHP Script.testAddElements.php" />
-        <item itemvalue="PHP Script.testColumns.php" />
       </list>
     </recent_temporary>
   </component>
@@ -243,12 +239,13 @@
       <workItem from="1549648381852" duration="10375000" />
       <workItem from="1549671472973" duration="691000" />
       <workItem from="1549725691818" duration="597000" />
-      <workItem from="1549824873719" duration="18580000" />
+      <workItem from="1549824873719" duration="21564000" />
+      <workItem from="1549881191958" duration="1308000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52992000" />
+    <option name="totallyTimeSpent" value="57284000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -260,21 +257,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-22" width="1922" height="1008" extended-state="6" />
+    <frame x="-1" y="-22" width="1922" height="984" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49586776" visible="true" weight="0.084311634" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49586776" visible="true" weight="0.12219851" />
       <window_info id="TODO" order="1" sideWeight="0.5023256" side_tool="true" weight="0.25506938" />
       <window_info id="Structure" order="2" sideWeight="0.5041322" side_tool="true" weight="0.1769317" />
       <window_info id="Favorites" order="3" sideWeight="0.5023256" side_tool="true" weight="0.25506938" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.25791857" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.27375567" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.27375567" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Docker" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.50348836" weight="0.25419664" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.50348836" visible="true" weight="0.24534884" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5005325" side_tool="true" weight="0.32771337" />
       <window_info anchor="bottom" id="JIRA" order="11" />
@@ -346,23 +344,7 @@
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/SimpleTableTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="27" lean-forward="true" selection-start-line="6" selection-start-column="27" selection-end-line="6" selection-end-column="27" />
-          <folding>
-            <element signature="e#7#49#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AnchorableEntity.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="153" column="33" selection-start-line="153" selection-start-column="33" selection-end-line="153" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/SimpleTableTest.php" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
@@ -377,51 +359,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/resumenMovCaja.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
-          <folding>
-            <element signature="e#41#85#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/testAddElements.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SheetTable.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="61" column="20" selection-start-line="61" selection-start-column="20" selection-end-line="61" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SheetTableCell.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SpreadsheetTableFacade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1824">
-          <caret line="84" column="46" selection-start-line="84" selection-start-column="46" selection-end-line="84" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SheetTableColumn.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1196">
-          <caret line="56" column="13" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/testAddElements.php" />
     <entry file="file://$PROJECT_DIR$/tests/exportSimpleTable.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
@@ -432,10 +370,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/SheetTableColumn.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="172" selection-start-line="172" selection-end-line="172" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SheetTableCell.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="35" column="20" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/testColumns.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="92">
+          <caret line="6" column="41" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SpreadsheetTableFacade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1863">
+          <caret line="82" selection-start-line="82" selection-end-line="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SheetTable.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6992">
+          <caret line="304" column="42" selection-start-line="304" selection-start-column="42" selection-end-line="304" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AnchorableEntity.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1909">
+          <caret line="83" column="4" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/resumenMovCaja.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="423">
+          <caret line="63" column="32" selection-start-line="63" selection-start-column="32" selection-end-line="63" selection-end-column="32" />
+          <folding>
+            <element signature="e#41#85#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/movCajaPlainSpreadsheet.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="538">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+          <folding>
+            <element signature="e#7#49#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -65,8 +65,11 @@ class SpreadsheetTableFacade
         foreach ($this->tables as $table) {
             if (!$firstTable) {
                 //TODO: Separator logic
-                //render separator
+                //if(!is_null($this->getDivisorFunction()))
+                //    call_user_func($this->getDivisorFunction(), [$this->sheet, $this->anchorCell]);
+                $this->anchorCell->row += 1;
             }
+            var_dump($this->anchorCell);
             $table->anchor($anchorCell->column, $anchorCell->row);
             $this->renderTable($table);
             //update point
@@ -202,7 +205,7 @@ class SpreadsheetTableFacade
     }
 
     /**
-     * Divisor function should accept a spreadsheet parameter.
+     * Divisor function should accept a spreadsheet parameter and current anchor.
      *
      * @param callable $divisorFunction
      *

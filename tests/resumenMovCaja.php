@@ -18,15 +18,15 @@ $tableOtherExpenses = new SheetTable();
 
 //Build tables
 $tableForeign->addElements(
-    (new SheetTableColumn())->setHeader('')->addValues('Ingresos', 'Interes cuenta', 'Interes Inversion', 'Dividendos / Utilidades'),
+    (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('')->addValues('Ingresos', 'Interes cuenta', 'Interes Inversion', 'Dividendos / Utilidades'),
     (new SheetTable())->setHeader('FUENTE EXTRANJERA')->addElements(
-        (new SheetTableColumn())->setHeader('Gravado Tabla')->setFooter('Total'),
-        (new SheetTableColumn())->setHeader('No gravado/Convenio')->setFooter('Total')
+        (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('Gravado Tabla')->setFooter('Total'),
+        (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('No gravado/Convenio')->setFooter('Total')
     )
 );
 
 $tableArgentina->addElements(
-    (new SheetTableColumn())->setHeader('')->addValues('Ingresos', '', 'Interes inversion', 'Dividendos / Utilidades'),
+    (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('')->addValues('Ingresos', '', 'Interes inversion', 'Dividendos / Utilidades'),
     (new SheetTable())->setHeader('FUENTE ARGENTINA')->addElements(
         (new SheetTable())->setHeader('Gravado')->addElements(
             (new SheetTableColumn())->setHeader('5%')->setFooter('-'),
@@ -41,7 +41,7 @@ $tableArgentina->addElements(
 );
 
 $tableExpenditure->addElements(
-    (new SheetTableColumn())->setHeader('')->addValues('', 'Interes', 'Gastos Varios', 'Gasto mantenimiento cuenta'),
+    (new SheetTableColumn())->setSheetCellWidth(2)->setHeader('')->addValues('', 'Interes', 'Gastos Varios', 'Gasto mantenimiento cuenta'),
     (new SheetTable())->setHeader('Gastos')->addElements(
         (new SheetTableColumn())->setHeader('Deducible'),
         (new SheetTableColumn())->setHeader('No'),
@@ -49,7 +49,7 @@ $tableExpenditure->addElements(
     )
 );
 $tableOtherExpenses->addElements(
-    (new SheetTableColumn())->setHeader('Otra informacion de interes')->addValues('Compras + Gs de compra',
+    (new SheetTableColumn())->setSheetCellWidth(2)->setHeader('Otra informacion de interes')->addValues('Compras + Gs de compra',
         'Ventas - Gs de Venta', 'Amortizacion de Titulos', 'Rescates - gastos de rescate', 'Constitucion plazo fijo',
         'Cobranza plazo fijo (capital + interes)', 'Transferencias (-)', 'Depositos (+)', 'Retiros (-)', 'Pago de tarjeta de Credito',
         'Retencion impuesto a las ganancias', 'Impuesto analogo exterior', 'Diferencias de cambio'),
