@@ -24,7 +24,7 @@ class SheetTableColumn extends AnchorableEntity
     private $footer;
     private $sheetCells;
     private $styleArray;
-
+    private $width;
     /**
      * SheetTableColumn constructor.
      *
@@ -89,12 +89,14 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function setSheetCellWidth(int $cellWidth) : self
     {
-        //NOTE: Conversely if performance becomes a concern, it may be said that
-        //the width of each cell is equivalent to the width of the column
-        foreach($this->getCells() as $cell){
-            $cell->setSheetCellWidth($cellWidth);
+        if($cellWidth >= 1) {
+            $this->width = $cellWidth;
+            //NOTE: Conversely if performance becomes a concern, it may be said that
+            //the width of each cell is equivalent to the width of the column
+            foreach ($this->getCells() as $cell) {
+                $cell->setSheetCellWidth($cellWidth);
+            }
         }
-
         return $this;
     }
 
@@ -110,7 +112,7 @@ class SheetTableColumn extends AnchorableEntity
 
         try {
             if(!is_null($headerValue)) {
-                $headerCell = new SheetTableCell($headerValue);
+                $headerCell = new SheetTableCell($headerValue, $this->getSheetCellWidth());
             }
         } catch (\Exception $e) {
             //Width exception should never occur, as if it does, it will occur
@@ -134,7 +136,7 @@ class SheetTableColumn extends AnchorableEntity
 
         try {
             if(!is_null($footerValue)) {
-                $footerCell = new SheetTableCell($footerValue);
+                $footerCell = new SheetTableCell($footerValue, $this->getSheetCellWidth());
             }
         } catch (\Exception $e) {
             //Width exception should never occur, as if it does, it will occur
@@ -163,7 +165,6 @@ class SheetTableColumn extends AnchorableEntity
 
             array_push($this->sheetCells, $sheetTableCell);
         }
-
         return $this;
     }
 
@@ -231,14 +232,6 @@ class SheetTableColumn extends AnchorableEntity
             return $sum + $cell->getSheetCellHeight();
         }, 0);
 
-        if($this->getHeader() !== NULL) {
-           $height += $this->getHeader()->getSheetCellHeight();
-        }
-
-        if($this->getFooter() !== NULL){
-            $height += $this->getFooter()->getSheetCellHeight();
-        }
-
         return $height;
     }
 
@@ -278,6 +271,8 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function getCells() : ?array
     {
+        //Important that this be ordered with header first and footer last as
+        //rendering facade depends on it
         $cellArray = $this->sheetCells;
 
         if (!is_null($this->header)){
@@ -311,12 +306,7 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function getSheetCellWidth() : int
     {
-        //Given that all cells must have the same width, it is sufficient to retrieve the size of an
-        //arbitrary cell.
-        if($this->getCells() === [])
-            return 0;
-
-        return $this->getCells()[0]->getSheetCellWidth();
+        return $this->width;
     }
 
     public function getStyleArray() {

@@ -94,7 +94,7 @@ class SheetTable extends AnchorableEntity
         //header cell comes first
         if(!is_null($this->header)) {
             $this->header->anchor($tableColumn, $tableRow);
-            $tableRow += $this->getSheetCellHeight();
+            $tableRow += $this->getHeader()->getSheetCellHeight();
         }
 
         foreach ($this->tableElements as $element) {
@@ -343,22 +343,14 @@ class SheetTable extends AnchorableEntity
      */
     public function getSheetCellWidth(): int
     {
-        $width = 0;
+        $widths = [0];
 
         if($this->tableElements !== []){
             foreach($this->tableElements as $element){
-                $width += $element->getSheetCellWidth();
+                array_push($widths, $element->getSheetCellWidth());
             }
         }
 
-        if($this->getHeader() !== NULL) {
-            $width += $this->getHeader()->getSheetCellWidth();
-        }
-
-        if($this->getFooter() !== NULL) {
-            $width += $this->getFooter()->getSheetCellWidth();
-        }
-
-        return $width;
+        return array_sum($widths);
     }
 }

@@ -1,6 +1,12 @@
 <?php
 require '../vendor/autoload.php';
 
+/**
+ * For now make sure that _ALL_ changes to table elements are done __before__
+ * calling export() or anchor(), as changing width afterwards will not trigger
+ * anchor updates causing layout to break. The alternative is to call
+ * anchor() after any dimension changes to ensure model is maintained.
+ */
 use \Crombi\PhpSpreadsheetHelper\SheetTable;
 use \Crombi\PhpSpreadsheetHelper\SheetTableColumn;
 use \Crombi\PhpSpreadsheetHelper\SpreadsheetTableFacade;
@@ -41,7 +47,7 @@ $tableArgentina->addElements(
 );
 
 $tableExpenditure->addElements(
-    (new SheetTableColumn())->setSheetCellWidth(2)->setHeader('')->addValues('', 'Interes', 'Gastos Varios', 'Gasto mantenimiento cuenta'),
+    (new SheetTableColumn())->setSheetCellWidth(2)->addValues('', '',  'Interes', 'Gastos Varios', 'Gasto mantenimiento cuenta'),
     (new SheetTable())->setHeader('Gastos')->addElements(
         (new SheetTableColumn())->setHeader('Deducible'),
         (new SheetTableColumn())->setHeader('No'),

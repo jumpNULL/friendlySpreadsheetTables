@@ -52,7 +52,11 @@ class SpreadsheetTableFacade
                 ],
             ]
         ],
-        'defaultColumnFooterStyle' => [],
+        'defaultColumnFooterStyle' => [
+            'font' => [
+                'bold' => true
+            ]
+        ],
         'defaultTableStyle' => [
             'borders' => [
                 'outline' => [
@@ -65,7 +69,7 @@ class SpreadsheetTableFacade
         ]
     ];
 
-    public function __construct(Worksheet $sheet, $anchorColumn = 'A', $anchorRow = 1)
+    public function __construct(Worksheet $sheet, $anchorColumn = 'B', $anchorRow = 2)
     {
         if (!Utility::validSheetCell($anchorColumn, $anchorRow)) throw new InvalidSheetCellAddressException($anchorColumn . strval($anchorRow));
         $this->sheet = $sheet;
@@ -77,21 +81,24 @@ class SpreadsheetTableFacade
 
     public function export(): SpreadsheetTableFacade
     {
-        $firstTable = true;
         $anchorCell = clone $this->anchorCell;
+
         foreach ($this->tables as $table) {
-            if (!$firstTable) {
-                //TODO: Separator logic
-                if (!is_null($this->getDivisorFunction())) call_user_func($this->getDivisorFunction(), [$this->sheet, $this->anchorCell]); else
-                    $this->anchorCell->row += 1;
+            if ($this->applyDefaultStyling) {
+                $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
             }
-            if ($this->applyDefaultStyling) $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
+
             $table->anchor($anchorCell->column, $anchorCell->row);
             $this->renderTable($table);
             //update point
             $lowerRightCell = $table->getLowerRightCell();
-            $anchorCell->row = $lowerRightCell->row++;
-            $firstTable = false;
+            $anchorCell->row = ($lowerRightCell->row++);
+
+            //TODO: Separator logic
+            if (!is_null($this->getDivisorFunction()))
+                call_user_func($this->getDivisorFunction(), [$this->sheet, $this->anchorCell]);
+            else
+                $anchorCell->row += 2;
         }
         return $this;
     }
@@ -118,7 +125,9 @@ class SpreadsheetTableFacade
                 $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
             }
         }
+
         $this->sheet->getStyle($table->getAnchorAddress() . ':' . $table->getLowerRightCellAddress())->applyFromArray($table->getStyleArray());
+
         if ($table->getHeader() !== NULL) {
             if ($table->getSheetCellWidth() > 1) {
                 try {
@@ -188,7 +197,7 @@ class SpreadsheetTableFacade
         //Pre-condition: cell->anchor() was successfully called (getAnchorAddress() !== NULL)
         try {
             if ($cell->getSheetCellWidth() > 1 || $cell->getSheetCellHeight() > 1) {
-                $this->sheet->mergeCells($cell->getAnchorAddress() . $cell->getLowerRightCellAddress());
+                $this->sheet->mergeCells($cell->getAnchorAddress() . ':' . $cell->getLowerRightCellAddress());
             }
             $sheetCell = $this->sheet->getCell($cell->getAnchorAddress());
             $sheetCell->setValue($cell->getValue());
