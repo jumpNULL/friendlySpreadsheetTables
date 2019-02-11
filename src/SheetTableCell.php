@@ -55,7 +55,7 @@ class SheetTableCell extends AnchorableEntity
      *
      * @return SheetTableCell
      */
-    public function setValue($value) : SheetTableCell
+    public function setValue($value) : self
     {
         if(!is_null($value))
             $this->value = $value;
@@ -76,7 +76,7 @@ class SheetTableCell extends AnchorableEntity
      *
      * @return SheetTableCell
      */
-    public function setStyleArray(array $styleArray) : SheetTableCell
+    public function setStyleArray(array $styleArray) : self
     {
         $this->styleArray = $styleArray;
 
@@ -88,7 +88,7 @@ class SheetTableCell extends AnchorableEntity
      * function simply returns the cell.
      * @return AnchorableEntity
      */
-    public function resolveAddresses(): AnchorableEntity
+    public function resolveAddresses(): self
     {
         return $this;
     }

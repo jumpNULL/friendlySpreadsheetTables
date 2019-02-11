@@ -73,7 +73,7 @@ class SheetTable extends AnchorableEntity
      * @param AnchorableEntity[] $tableEntities
      * @return SheetTable
      */
-    public function addElements(AnchorableEntity ...$tableEntities) : SheetTable
+    public function addElements(AnchorableEntity ...$tableEntities) : self
     {
         foreach($tableEntities as $entity){
             if(!is_null($tableEntities))
@@ -86,7 +86,7 @@ class SheetTable extends AnchorableEntity
     /**
      * @inheritdoc
      */
-    protected function resolveAddresses()
+    protected function resolveAddresses() : self
     {
         $tableColumn = $this->getAnchor()->column;
         $tableRow = $this->getAnchor()->row;
@@ -106,6 +106,8 @@ class SheetTable extends AnchorableEntity
         //footer cell comes last
         if(!is_null($this->footer))
             $this->footer->anchor($this->getAnchor()->column, ++$lowestRow);
+
+        return $this;
     }
 
     /**
@@ -114,13 +116,13 @@ class SheetTable extends AnchorableEntity
      *
      * @return SheetTableColumn
      */
-    public function setHeader($headerValue) : SheetTable
+    public function setHeader($headerValue) : self
     {
         $headerCell = $this->header;
 
         try {
             if(!is_null($headerValue)) {
-                $headerCell = new SheetTableCell($headerValue, $this->getSheetCellWidth());
+                $headerCell = new SheetTableCell($headerValue);
             }
         } catch (\Exception $e) {
             //Width exception should never occur, as if it does, it will occur
@@ -137,13 +139,13 @@ class SheetTable extends AnchorableEntity
      *
      * @return SheetTableColumn
      */
-    public function setFooter($footerValue) : SheetTable
+    public function setFooter($footerValue) : self
     {
         $footerCell = $this->footer;
 
         try {
             if(!is_null($footerValue)) {
-                $footerCell = new SheetTableCell($footerValue, $this->getSheetCellWidth());
+                $footerCell = new SheetTableCell($footerValue);
             }
         } catch (\Exception $e) {
             //Width exception should never occur, as if it does, it will occur
@@ -155,12 +157,12 @@ class SheetTable extends AnchorableEntity
     }
 
     /**
-     *
+     * @todo
      * @param array[] $value
      *
      * @return SheetTable
      */
-    public function addValues(array ...$value) : SheetTable
+    public function addValues(array ...$value) : self
     {
         return $this;
     }
@@ -194,7 +196,7 @@ class SheetTable extends AnchorableEntity
      * @param bool $isRectangular
      * @return SheetTable
      */
-    public function rectangularTable(bool $isRectangular) : SheetTable
+    public function rectangularTable(bool $isRectangular) : self
     {
         $this->isRectangularTable = $isRectangular;
 
@@ -207,7 +209,7 @@ class SheetTable extends AnchorableEntity
     public function getHeader() : ?SheetTableCell
     {
         if(!is_null($this->header))
-            return $this->header;
+            return clone $this->header;
 
         return NULL;
     }
@@ -231,7 +233,7 @@ class SheetTable extends AnchorableEntity
      *
      * @return SheetTable
      */
-    public function setStyleArray (array $styleArray) : SheetTable
+    public function setStyleArray (array $styleArray) : self
     {
         $this->styleArray = $styleArray;
 
@@ -266,9 +268,9 @@ class SheetTable extends AnchorableEntity
      * @param array $styleArray
      * @return SheetTable
      */
-    public function setHeaderStyleArray(array $styleArray) : SheetTable
+    public function setHeaderStyleArray(array $styleArray) : self
     {
-        $this->getHeader()->setStyleArray($styleArray);
+        $this->header->setStyleArray($styleArray);
         return $this;
     }
 
@@ -276,40 +278,87 @@ class SheetTable extends AnchorableEntity
      * @param array $styleArray
      * @return SheetTable
      */
-    public function setFooterStyleArray(array $styleArray) : SheetTable
+    public function setFooterStyleArray(array $styleArray) : self
     {
-        $this->getFooter()->setStyleArray($styleArray);
+        $this->footer->setStyleArray($styleArray);
         return $this;
     }
 
     /**
      * Setting height of a table is not allowed.
      *
-     * @return AnchorableEntity|void
+     * @param int $height
+     *
+     * @return SheetTable
      * @throws Exception
      */
-    public function setSheetCellHeight(){
+    public function setSheetCellHeight(int $height) : self
+    {
         throw new Exception();
     }
 
     /**
      * Setting width of a table is not allowed.
      *
+     * @param int $width
+     *
      * @return AnchorableEntity|void
      * @throws Exception
      */
-    public function setSheetCellWidth(){
+    public function setSheetCellWidth(int $width) : self
+    {
         throw new Exception();
     }
 
     //TODO: Calculations need to be written
-    public function getSheetCellHeight(): int
+
+    /**
+     * The height of a table is the greatest height among all of its elements.
+     * @return int
+     */
+    public function getSheetCellHeight() : int
     {
-        return parent::getSheetCellHeight(); // TODO: Change the autogenerated stub
+        $heights = [0];
+
+        if($this->tableElements !== []){
+            foreach($this->tableElements as $element){
+                array_push($heights, $element->getSheetCellHeight());
+            }
+        }
+
+        if($this->getHeader() !== NULL) {
+            array_push($heights, $this->getHeader()->getSheetCellHeight());
+        }
+
+        if($this->getFooter() !== NULL) {
+            array_push($heights, $this->getFooter()->getSheetCellHeight());
+        }
+
+        return max($heights);
     }
 
+    /**
+     * The width of a table is the sum of the widths of its elements.
+     * @return int
+     */
     public function getSheetCellWidth(): int
     {
-        return parent::getSheetCellWidth(); // TODO: Change the autogenerated stub
+        $width = 0;
+
+        if($this->tableElements !== []){
+            foreach($this->tableElements as $element){
+                $width += $element->getSheetCellWidth();
+            }
+        }
+
+        if($this->getHeader() !== NULL) {
+            $width += $this->getHeader()->getSheetCellWidth();
+        }
+
+        if($this->getFooter() !== NULL) {
+            $width += $this->getFooter()->getSheetCellWidth();
+        }
+
+        return $width;
     }
 }

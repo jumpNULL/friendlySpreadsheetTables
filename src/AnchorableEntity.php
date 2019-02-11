@@ -176,6 +176,7 @@ abstract class AnchorableEntity
             );
         }
     }
+
     /**
      * Returns whether a table element has been anchored to a sheet cell.
      *

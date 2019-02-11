@@ -1,5 +1,5 @@
 <?php
-
+require '../vendor/autoload.php';
 use \PhpOffice\PhpSpreadsheet\Spreadsheet;
 use \PhpOffice\PhpSpreadsheet\Writer\Xls;
 
@@ -35,15 +35,14 @@ for($row = 25; $row <= 45; $row++) {
 
 //set styles
 $titleStyle = [
-    'alignment' => []
 ];
 
-$sheet->getStyle('F25:H25')->applyFromArray();
-$sheet->getStyle('D17:I17')->applyFromArray();
-$sheet->getStyle('F31')->applyFromArray();
-$sheet->getStyle('D9:I9')->applyFromArray();
-$sheet->getStyle('D9:F9')->applyFromArray();
-$sheet->getStyle('G9:I9')->applyFromArray();
+$sheet->getStyle('F25:H25')->applyFromArray($titleStyle);
+$sheet->getStyle('D17:I17')->applyFromArray($titleStyle);
+$sheet->getStyle('F31')->applyFromArray($titleStyle);
+$sheet->getStyle('D9:I9')->applyFromArray($titleStyle);
+$sheet->getStyle('D9:F9')->applyFromArray($titleStyle);
+$sheet->getStyle('G9:I9')->applyFromArray($titleStyle);
 
 $xls = new Xls($spreadsheet);
-$xls->save('plainMovCaja');
+$xls->save('plainMovCaja.xls');

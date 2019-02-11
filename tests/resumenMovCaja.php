@@ -9,6 +9,7 @@ use \PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 $spreadsheet = new Spreadsheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
+$facade->applyDefaultStyle(true);
 
 //Declare our tables
 $tableArgentina = new SheetTable();
@@ -18,7 +19,7 @@ $tableOtherExpenses = new SheetTable();
 
 //Build tables
 $tableForeign->addElements(
-    (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('')->addValues('Ingresos', 'Interes cuenta', 'Interes Inversion', 'Dividendos / Utilidades'),
+    (new SheetTableColumn())->setSheetCellWidth(3)->addValues('', 'Ingresos', 'Interes cuenta', 'Interes Inversion', 'Dividendos / Utilidades'),
     (new SheetTable())->setHeader('FUENTE EXTRANJERA')->addElements(
         (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('Gravado Tabla')->setFooter('Total'),
         (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('No gravado/Convenio')->setFooter('Total')
@@ -26,7 +27,7 @@ $tableForeign->addElements(
 );
 
 $tableArgentina->addElements(
-    (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('')->addValues('Ingresos', '', 'Interes inversion', 'Dividendos / Utilidades'),
+    (new SheetTableColumn())->setSheetCellWidth(3)->addValues('', 'Ingresos', '', 'Interes inversion', 'Dividendos / Utilidades'),
     (new SheetTable())->setHeader('FUENTE ARGENTINA')->addElements(
         (new SheetTable())->setHeader('Gravado')->addElements(
             (new SheetTableColumn())->setHeader('5%')->setFooter('-'),
@@ -34,8 +35,7 @@ $tableArgentina->addElements(
             (new SheetTableColumn())->setHeader('13%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('15%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('Tabla')->setFooter('-')
-
-        ),
+    ),
         (new SheetTableColumn())->setHeader('No computable')
     )
 );
