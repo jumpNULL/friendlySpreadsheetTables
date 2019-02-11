@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace Crombi\PhpSpreadsheetHelper;
 
-use mysql_xdevapi\Exception;
-
 /**
  * Class SheetTableColumn
  * An ordered set of values rendered vertically, each one below the last.
@@ -42,7 +40,7 @@ class SheetTableColumn extends AnchorableEntity
      * @throws InvalidTableCellDimensionException
      * @throws TableColumnWidthLocked
      */
-    public function __construct(array $values = array(), int $width = -1)
+    public function __construct(array $values = NULL, int $width = -1)
     {
         parent::__construct();
 
@@ -56,7 +54,8 @@ class SheetTableColumn extends AnchorableEntity
             $this->setSheetCellWidth(1);
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
-        $this->addValues($values);
+        if(!is_null($values))
+            $this->addValues($values);
 
     }
 
@@ -169,7 +168,7 @@ class SheetTableColumn extends AnchorableEntity
      *
      * @return SheetTableColumn
      */
-    public function addValues(array $values) : SheetTableColumn
+    public function addValues(...$values) : SheetTableColumn
     {
         foreach ($values as $value)
         {

@@ -147,7 +147,7 @@ class SpreadsheetTableFacade
                 try {
                     $this->sheet->mergeCells($anchorColumn . $currentRow .
                     ':' . $rightMostCell->column . $currentRow);
-                    $this->sheet->getStyle($anchorColumn.$currentRow)->applyFromArray($column->getHeader()-);
+                    //$this->sheet->getStyle($anchorColumn.$currentRow)->applyFromArray($column->getHeader()-);
                 } catch (\Exception $e) {
                     throw $e;
                 };

@@ -14,8 +14,8 @@ $table = new SheetTable();
 //Test variable width columns with mismatched data amount and building table out
 //from the pre-populated columns
 $table->addElements(
-    (new SheetTableColumn([], 2))->setHeader('ColumnOne')->addValues([1,2])->setFooter(1+2)
-   //, (new SheetTableColumn())->setHeader('ColumnTwo')->addValues([3])
+    (new SheetTableColumn(NULL, 2))->setHeader('ColumnOne')->addValues(1,2)->setFooter(1+2),
+    (new SheetTableColumn())->setHeader('ColumnTwo')->addValues(3)
 )->setHeader('Test Table')->setFooter('Test Footer');
 
 //Test adding data to table directly where data count is less than number of
@@ -32,7 +32,6 @@ $spreadsheet = new SpreadSheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 
 $facade->addTables($table)->export();
-var_dump($table->getElements());
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);
 $writer->save("test.xls");

@@ -149,6 +149,10 @@ abstract class AnchorableEntity
         return clone $this->cellAnchor;
     }
 
+    /**
+     * @return object
+     * @throws UnanchoredException
+     */
     public function getLowerRightCell() : object
     {
         if(!$this->isAnchored())

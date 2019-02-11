@@ -21,6 +21,13 @@ namespace Crombi\PhpSpreadsheetHelper;
  * of each column and sub-table, but the height is the height of the largest
  * column or sub-table.
  *
+ * @todo For now columns must be constructed manually. Adding in values, be they simple sets,
+ *       such as (1, 2, 3) or complex sets (1, (2, 3)) is currently pending. Each entry should
+ *       be interpreted as a column, with subarray representing a sub-table.
+ *
+ * @todo Add being able to tag a column or table with an ID so the user can retrieve it
+ *       later to alter properties.
+ *
  * @todo Decouple classes from PHPSpreadsheet and its styling. Styling should probably
  *       be refactored to a Trait so as to gather as much externally dependant code
  *       into one place.
@@ -100,7 +107,6 @@ class SheetTable extends AnchorableEntity
             $this->footer->anchor($this->getAnchor()->column, ++$lowestRow);
     }
 
-
     /**
      * @param object|NULL $headerValue Sets header to given value. If header value
      *                               is NULL, header is removed.
@@ -175,11 +181,18 @@ class SheetTable extends AnchorableEntity
         return $this->tableElements;
     }
 
+    /**
+     * @return bool
+     */
     public function isRectangularTable() : bool
     {
         return $this->isRectangularTable;
     }
 
+    /**
+     * @param bool $isRectangular
+     * @return SheetTable
+     */
     public function rectangularTable(bool $isRectangular) : SheetTable
     {
         $this->isRectangularTable = $isRectangular;
@@ -187,20 +200,26 @@ class SheetTable extends AnchorableEntity
         return $this;
     }
 
+    /**
+     * @return SheetTableCell|null
+     */
     public function getHeader() : ?SheetTableCell
     {
-        if(is_null($this->header))
-            return NULL;
+        if(!is_null($this->header))
+            return $this->header;
 
-        return clone $this->header;
+        return NULL;
     }
 
+    /**
+     * @return SheetTableCell|null
+     */
     public function getFooter() : ?SheetTableCell
     {
-        if(is_null($this->header))
-            return NULL;
+        if(!is_null($this->footer))
+            return clone $this->footer;
 
-        return clone $this->footer;
+        return NULL;
     }
     /**
      * Sets the tables style. A tables style applies to all elements it contains.
@@ -226,25 +245,40 @@ class SheetTable extends AnchorableEntity
         return $this->styleArray;
     }
 
+    /**
+     * @return array
+     */
     public function getHeaderStyleArray() : array
     {
         return $this->getHeader()->getStyleArray();
     }
 
+    /**
+     * @return array
+     */
     public function getFooterStyleArray() : array
     {
         return $this->getFooter()->getStyleArray();
     }
 
+    /**
+     * @param array $styleArray
+     * @return SheetTable
+     */
     public function setHeaderStyleArray(array $styleArray) : SheetTable
     {
         $this->getHeader()->setStyleArray($styleArray);
         return $this;
     }
 
+    /**
+     * @param array $styleArray
+     * @return SheetTable
+     */
     public function setFooterStyleArray(array $styleArray) : SheetTable
     {
         $this->getFooter()->setStyleArray($styleArray);
         return $this;
     }
+
 }
