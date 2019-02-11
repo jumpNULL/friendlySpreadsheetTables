@@ -37,7 +37,7 @@ $tableArgentina->addElements(
     (new SheetTable())->setHeader('FUENTE ARGENTINA')->addElements(
         (new SheetTable())->setHeader('Gravado')->addElements(
             (new SheetTableColumn())->setHeader('5%')->setFooter('-'),
-            (new SheetTableColumn())->setHeader('7%')->SetFooter('-'),
+            (new SheetTableColumn())->setHeader('7%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('13%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('15%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('Tabla')->setFooter('-')
