@@ -38,18 +38,18 @@ class SpreadsheetTableFacade
         'defaultTableHeaderStyle' => [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ]
-        ],
-        'defaultTableFooterStyle' => [],
-        'defaultColumnHeaderStyle' => [
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-            ],
+                ],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'startColor' => [
                     'argb' => 'FFA0A0A0'
                 ],
+            ]
+        ],
+        'defaultTableFooterStyle' => [],
+        'defaultColumnHeaderStyle' => [
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
             ]
         ],
         'defaultColumnFooterStyle' => [
@@ -87,6 +87,8 @@ class SpreadsheetTableFacade
         foreach ($this->tables as $table) {
             if ($this->applyDefaultStyling) {
                 $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
+                $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
+                $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
             }
 
             $table->anchor($anchorCell->column, $anchorCell->row);
@@ -119,15 +121,6 @@ class SpreadsheetTableFacade
         $anchorCell = $table->getAnchor();
         $rightCell = $table->getLowerRightCell();
         //apply style over range
-        if ($this->applyDefaultStyling) {
-            //Header and titles are immutable, so we need to build a new reference
-            if ($table->getHeader() !== NULL) {
-                $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
-            }
-            if ($table->getFooter() !== NULL) {
-                $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
-            }
-        }
 
         $this->sheet->getStyle($table->getAnchorAddress() . ':' . $table->getLowerRightCellAddress())->applyFromArray($table->getStyleArray());
 
@@ -177,13 +170,10 @@ class SpreadsheetTableFacade
     public function renderColumn(SheetTableColumn $column): SpreadsheetTableFacade
     {
         if ($this->applyDefaultStyling) {
-            if ($column->getHeader() !== NULL) {
                 $column->setHeaderStyleArray($this->defaultStyles['defaultColumnHeaderStyle']);
-            }
-            if ($column->getFooter() !== NULL) {
                 $column->setFooterStyleArray($this->defaultStyles['defaultColumnFooterStyle']);
-            }
         }
+
         $this->sheet->getStyle($column->getAnchorAddress() . ':' . $column->getLowerRightCellAddress())->applyFromArray($column->getStyleArray());
         //If column size is greater than unity, merge cells to which column will map
         foreach ($column->getCells() as $cell) {

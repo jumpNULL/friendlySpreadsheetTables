@@ -126,7 +126,7 @@ class SheetTable extends AnchorableEntity
         $headerCell = $this->header;
 
         try {
-            if($headerValue === NULL) {
+            if($headerValue !== NULL) {
                 $headerCell = new SheetTableCell($headerValue);
             }
         } catch (\Exception $e) {
@@ -281,7 +281,10 @@ class SheetTable extends AnchorableEntity
      */
     public function setHeaderStyleArray(array $styleArray) : self
     {
+        if ($this->header !== NULL) {
         $this->header->setStyleArray($styleArray);
+        }
+
         return $this;
     }
 

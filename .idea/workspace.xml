@@ -3,13 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ed81f07e-1a83-45a5-a1db-d7cba5a7aa40" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SheetTable.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SheetTable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SheetTableCell.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SheetTableCell.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SheetTableColumn.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SheetTableColumn.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/resumenMovCaja.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/resumenMovCaja.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,11 +17,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/resumenMovCaja.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="63" lean-forward="true" selection-start-line="15" selection-end-line="69" selection-end-column="34" />
+            <state relative-caret-position="191">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/SheetTable.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1852">
+              <caret line="128" column="28" selection-start-line="128" selection-start-column="28" selection-end-line="128" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/SpreadsheetTableFacade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="91" column="12" selection-start-line="91" selection-start-column="12" selection-end-line="91" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -49,11 +62,11 @@
         <option value="$PROJECT_DIR$/src/AnchorableEntity.php" />
         <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/src/Utility.php" />
-        <option value="$PROJECT_DIR$/tests/resumenMovCaja.php" />
+        <option value="$PROJECT_DIR$/src/SheetTableCell.php" />
         <option value="$PROJECT_DIR$/src/SheetTableColumn.php" />
         <option value="$PROJECT_DIR$/src/SheetTable.php" />
+        <option value="$PROJECT_DIR$/tests/resumenMovCaja.php" />
         <option value="$PROJECT_DIR$/src/SpreadsheetTableFacade.php" />
-        <option value="$PROJECT_DIR$/src/SheetTableCell.php" />
       </list>
     </option>
   </component>
@@ -76,8 +89,9 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1489" />
     <option name="y" value="25" />
-    <option name="width" value="987" />
+    <option name="width" value="427" />
     <option name="height" value="1051" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -86,6 +100,22 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="friendlySpreadsheetTables" type="b2602c69:ProjectViewProjectNode" />
+              <item name="friendlySpreadsheetTables" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="friendlySpreadsheetTables" type="b2602c69:ProjectViewProjectNode" />
+              <item name="friendlySpreadsheetTables" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -102,22 +132,6 @@
               <item name="phpSpreadsheetHelper" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="tests" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="friendlySpreadsheetTables" type="b2602c69:ProjectViewProjectNode" />
-              <item name="friendlySpreadsheetTables" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="friendlySpreadsheetTables" type="b2602c69:ProjectViewProjectNode" />
-              <item name="friendlySpreadsheetTables" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -182,22 +196,24 @@
       <workItem from="1549898865832" duration="6582000" />
       <workItem from="1549907591897" duration="636000" />
       <workItem from="1549908264642" duration="2971000" />
+      <workItem from="1549911888842" duration="129000" />
+      <workItem from="1549913448923" duration="932000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57631000" />
+    <option name="totallyTimeSpent" value="58692000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="987" height="537" extended-state="6" />
+    <frame x="1489" y="25" width="427" height="1051" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48955917" visible="true" weight="0.1957672" />
-      <window_info id="Structure" order="1" sideWeight="0.5104408" side_tool="true" visible="true" weight="0.1957672" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48663855" visible="true" weight="0.4935065" />
+      <window_info id="Structure" order="1" sideWeight="0.51336145" side_tool="true" visible="true" weight="0.4935065" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.53227514" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.71925753" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24761905" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -205,7 +221,7 @@
       <window_info anchor="bottom" id="Docker" order="7" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.6552828" weight="0.17702845" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.6552828" weight="0.072708115" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5005325" side_tool="true" weight="0.32771337" />
       <window_info anchor="bottom" id="JIRA" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -295,27 +311,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SheetTableColumn.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="20" column="29" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SheetTable.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="354" column="17" selection-start-line="354" selection-start-column="17" selection-end-line="354" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SpreadsheetTableFacade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="252" column="4" selection-start-line="252" selection-start-column="4" selection-end-line="252" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/SheetTableCell.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="245">
@@ -330,10 +325,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/SheetTableColumn.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="123" selection-start-line="123" selection-end-line="123" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/resumenMovCaja.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="63" lean-forward="true" selection-start-line="15" selection-end-line="69" selection-end-column="34" />
+        <state relative-caret-position="191">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SheetTable.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1852">
+          <caret line="128" column="28" selection-start-line="128" selection-start-column="28" selection-end-line="128" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SpreadsheetTableFacade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="91" column="12" selection-start-line="91" selection-start-column="12" selection-end-line="91" selection-end-column="12" />
         </state>
       </provider>
     </entry>
