@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  * **NOTE**: This class is _tightly_ coupled to the PHPSpreadsheet library.
  *
  * @todo    Equations are currently not supported and must be added after building.
- *    Add support for alignment by separators in tuple values, header and footer.
+ *    Add support for aligning elements based on separators in cell values, header and footer.
  *
  * @todo    As a possible performance improvement point consider Settings::setCache()
  *       which expects a Psr compatible Cache implementation.
@@ -38,18 +38,18 @@ class SpreadsheetTableFacade
         'defaultTableHeaderStyle' => [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ]
-        ],
-        'defaultTableFooterStyle' => [],
-        'defaultColumnHeaderStyle' => [
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-            ],
+                ],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'startColor' => [
                     'argb' => 'FFA0A0A0'
                 ],
+            ]
+        ],
+        'defaultTableFooterStyle' => [],
+        'defaultColumnHeaderStyle' => [
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
             ]
         ],
         'defaultColumnFooterStyle' => [
@@ -71,12 +71,13 @@ class SpreadsheetTableFacade
 
     public function __construct(Worksheet $sheet, $anchorColumn = 'B', $anchorRow = 2)
     {
-        if (!Utility::validSheetCell($anchorColumn, $anchorRow)) throw new InvalidSheetCellAddressException($anchorColumn . strval($anchorRow));
+        if (!Utility::validSheetCell($anchorColumn, $anchorRow)) {
+            throw new InvalidSheetCellAddressException($anchorColumn . $anchorRow);
+        }
         $this->sheet = $sheet;
         $this->anchorCell = (object)['column' => $anchorColumn, 'row' => $anchorRow];
         $this->tables = array();
         $this->applyDefaultStyling = false;
-        $this->divisorFunction = NULL;
     }
 
     public function export(): SpreadsheetTableFacade
@@ -86,6 +87,8 @@ class SpreadsheetTableFacade
         foreach ($this->tables as $table) {
             if ($this->applyDefaultStyling) {
                 $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
+                $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
+                $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
             }
 
             $table->anchor($anchorCell->column, $anchorCell->row);
@@ -95,10 +98,12 @@ class SpreadsheetTableFacade
             $anchorCell->row = ($lowerRightCell->row++);
 
             //TODO: Separator logic
-            if (!is_null($this->getDivisorFunction()))
+            if ($this->getDivisorFunction() !== NULL) {
                 call_user_func($this->getDivisorFunction(), [$this->sheet, $this->anchorCell]);
-            else
+            }
+            else {
                 $anchorCell->row += 2;
+            }
         }
         return $this;
     }
@@ -116,15 +121,6 @@ class SpreadsheetTableFacade
         $anchorCell = $table->getAnchor();
         $rightCell = $table->getLowerRightCell();
         //apply style over range
-        if ($this->applyDefaultStyling) {
-            //Header and titles are immutable, so we need to build a new reference
-            if ($table->getHeader() !== NULL) {
-                $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
-            }
-            if ($table->getFooter() !== NULL) {
-                $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
-            }
-        }
 
         $this->sheet->getStyle($table->getAnchorAddress() . ':' . $table->getLowerRightCellAddress())->applyFromArray($table->getStyleArray());
 
@@ -144,7 +140,9 @@ class SpreadsheetTableFacade
             //    the same level to ensure visual consistency.
             if (is_a($entity, SheetTableColumn::class)) {
                 $this->renderColumn($entity);
-            } elseif (is_a($entity, SheetTable::class)) $this->renderTable($entity);
+            } elseif (is_a($entity, SheetTable::class)) {
+                $this->renderTable($entity);
+            }
         }
         if ($table->getFooter() !== NULL) {
             //render footer
@@ -172,9 +170,10 @@ class SpreadsheetTableFacade
     public function renderColumn(SheetTableColumn $column): SpreadsheetTableFacade
     {
         if ($this->applyDefaultStyling) {
-            if ($column->getHeader() !== NULL) $column->setHeaderStyleArray($this->defaultStyles['defaultColumnHeaderStyle']);
-            if ($column->getFooter() !== NULL) $column->setFooterStyleArray($this->defaultStyles['defaultColumnFooterStyle']);
+                $column->setHeaderStyleArray($this->defaultStyles['defaultColumnHeaderStyle']);
+                $column->setFooterStyleArray($this->defaultStyles['defaultColumnFooterStyle']);
         }
+
         $this->sheet->getStyle($column->getAnchorAddress() . ':' . $column->getLowerRightCellAddress())->applyFromArray($column->getStyleArray());
         //If column size is greater than unity, merge cells to which column will map
         foreach ($column->getCells() as $cell) {
@@ -200,8 +199,12 @@ class SpreadsheetTableFacade
                 $this->sheet->mergeCells($cell->getAnchorAddress() . ':' . $cell->getLowerRightCellAddress());
             }
             $sheetCell = $this->sheet->getCell($cell->getAnchorAddress());
-            $sheetCell->setValue($cell->getValue());
-            $sheetCell->getStyle()->applyFromArray($cell->getStyleArray());
+            if ($sheetCell !== NULL) {
+                $sheetCell->setValue($cell->getValue());
+            }
+            if ($sheetCell !== NULL) {
+                $sheetCell->getStyle()->applyFromArray($cell->getStyleArray());
+            }
         } catch (\Exception $e) {
             throw $e;
         }
@@ -219,7 +222,9 @@ class SpreadsheetTableFacade
     public function addTables(SheetTable ...$tables): SpreadsheetTableFacade
     {
         foreach ($tables as $table) {
-            if (!is_null($table) && is_object($table)) array_push($this->tables, $table);
+            if ($table !== NULL && is_object($table)) {
+                $this->tables[] = $table;
+            }
         }
         return $this;
     }

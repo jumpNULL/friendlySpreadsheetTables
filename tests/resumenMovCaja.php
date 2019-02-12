@@ -24,20 +24,20 @@ $tableExpenditure = new SheetTable();
 $tableOtherExpenses = new SheetTable();
 
 //Build tables
-$tableForeign->addElements(
+$tableForeign->setHeader('FUENTE EXTRANJERA')->addElements(
     (new SheetTableColumn())->setSheetCellWidth(3)->addValues('', 'Ingresos', 'Interes cuenta', 'Interes Inversion', 'Dividendos / Utilidades'),
-    (new SheetTable())->setHeader('FUENTE EXTRANJERA')->addElements(
+    (new SheetTable())->addElements(
         (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('Gravado Tabla')->setFooter('Total'),
         (new SheetTableColumn())->setSheetCellWidth(3)->setHeader('No gravado/Convenio')->setFooter('Total')
     )
 );
 
-$tableArgentina->addElements(
+    $tableArgentina->setHeader('FUENTE ARGENTINA')->addElements(
     (new SheetTableColumn())->setSheetCellWidth(3)->addValues('', 'Ingresos', '', 'Interes inversion', 'Dividendos / Utilidades'),
-    (new SheetTable())->setHeader('FUENTE ARGENTINA')->addElements(
+    (new SheetTable())->addElements(
         (new SheetTable())->setHeader('Gravado')->addElements(
             (new SheetTableColumn())->setHeader('5%')->setFooter('-'),
-            (new SheetTableColumn())->setHeader('7%')->SetFooter('-'),
+            (new SheetTableColumn())->setHeader('7%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('13%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('15%')->setFooter('-'),
             (new SheetTableColumn())->setHeader('Tabla')->setFooter('-')

@@ -1,5 +1,5 @@
 {
-    "name": "nelson/php-spreadsheet-helper",
+    "name": "crombi/php-spreadsheet-helper",
     "description": "Package for assisting in the generation of Spreadsheet utilizing PHPSpreadsheet.",
     "type": "library",
     "license": "MIT",

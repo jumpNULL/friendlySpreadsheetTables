@@ -57,8 +57,9 @@ class SheetTableCell extends AnchorableEntity
      */
     public function setValue($value) : self
     {
-        if(!is_null($value))
+        if($value !== NULL) {
             $this->value = $value;
+        }
 
         return $this;
     }
@@ -86,7 +87,7 @@ class SheetTableCell extends AnchorableEntity
     /**
      * Table cells are atomic and have no post-anchor update logic. This
      * function simply returns the cell.
-     * @return AnchorableEntity
+     * @return SheetTableCell
      */
     public function resolveAddresses(): self
     {

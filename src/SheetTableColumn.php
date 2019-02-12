@@ -25,14 +25,13 @@ class SheetTableColumn extends AnchorableEntity
     private $sheetCells;
     private $styleArray;
     private $width;
+
     /**
      * SheetTableColumn constructor.
      *
-     * @param array       $values
-     * @param int         $width
+     * @param array $values
+     * @param int   $width
      *
-     * @throws InvalidTableCellDimensionException
-     * @throws TableColumnWidthLocked
      */
     public function __construct(array $values = NULL, int $width = -1)
     {
@@ -41,14 +40,17 @@ class SheetTableColumn extends AnchorableEntity
         $this->sheetCells = array();
         $this->setStyleArray([]);
         //We need a width if we are going to be adding in headers and footers
-        if($width > 0)
+        if($width > 0) {
             $this->setSheetCellWidth($width);
-        else
+        }
+        else {
             $this->setSheetCellWidth(1);
+        }
         //An empty string would be a cell with an empty title, NULL
         //is _no_ cell
-        if(!is_null($values))
+        if($values !== NULL) {
             $this->addValues($values);
+        }
 
     }
 
@@ -63,19 +65,20 @@ class SheetTableColumn extends AnchorableEntity
         $cellRow = $this->cellAnchor->row;
 
         //header cell comes first
-        if(!is_null($this->header)) {
+        if($this->header !== NULL) {
             $this->header->anchor($cellColumn, $cellRow);
-            $cellRow += 1;
+            ++$cellRow;
         }
 
         foreach ($this->sheetCells as $cell){
             $cell->anchor($cellColumn, $cellRow);
-            $cellRow += 1;
+            ++$cellRow;
         }
 
         //footer cell comes last
-        if(!is_null($this->footer))
+        if($this->footer !== NULL) {
             $this->footer->anchor($cellColumn, $cellRow);
+        }
 
         return $this;
     }
@@ -111,7 +114,7 @@ class SheetTableColumn extends AnchorableEntity
         $headerCell = $this->header;
 
         try {
-            if(!is_null($headerValue)) {
+            if($headerValue !== NULL) {
                 $headerCell = new SheetTableCell($headerValue, $this->getSheetCellWidth());
             }
         } catch (\Exception $e) {
@@ -135,7 +138,7 @@ class SheetTableColumn extends AnchorableEntity
         $footerCell = $this->footer;
 
         try {
-            if(!is_null($footerValue)) {
+            if($footerValue !== NULL) {
                 $footerCell = new SheetTableCell($footerValue, $this->getSheetCellWidth());
             }
         } catch (\Exception $e) {
@@ -155,15 +158,15 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function addValues(...$values) : self
     {
-        foreach ($values as $value)
-        {
-            try {
-                $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
-            } catch (\Exception $e) {
-                continue;
+        foreach($values as $array) {
+            foreach ($array as $value) {
+                try {
+                    $sheetTableCell = new SheetTableCell($value, $this->getSheetCellWidth());
+                } catch (\Exception $e) {
+                    continue;
+                }
+                $this->sheetCells[] = $sheetTableCell;
             }
-
-            array_push($this->sheetCells, $sheetTableCell);
         }
         return $this;
     }
@@ -186,8 +189,9 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function setHeaderStyleArray (array $styleArray) : self
     {
-        if(!is_null($this->header))
+        if($this->header !== NULL) {
             $this->header->setStyleArray($styleArray);
+        }
         return $this;
     }
 
@@ -198,8 +202,9 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function setFooterStyleArray(array $styleArray) : self
     {
-        if(!is_null($this->footer))
+        if($this->footer !== NULL) {
             $this->footer->setStyleArray($styleArray);
+        }
 
         return $this;
     }
@@ -240,8 +245,9 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function getHeader() : ?SheetTableCell
     {
-        if(!is_null($this->header))
+        if($this->header !== NULL) {
             return clone $this->header;
+        }
 
         return NULL;
     }
@@ -251,8 +257,9 @@ class SheetTableColumn extends AnchorableEntity
      */
     public function getFooter() : ?SheetTableCell
     {
-        if(!is_null($this->footer))
+        if($this->footer !== NULL) {
             return clone $this->footer;
+        }
 
         return NULL;
     }
@@ -275,11 +282,11 @@ class SheetTableColumn extends AnchorableEntity
         //rendering facade depends on it
         $cellArray = $this->sheetCells;
 
-        if (!is_null($this->header)){
+        if ($this->header !== NULL){
             $cellArray = array_merge([$this->header], $cellArray);
         }
 
-        if(!is_null($this->footer)){
+        if($this->footer !== NULL){
             $cellArray = array_merge($cellArray, [$this->footer]);
         }
 

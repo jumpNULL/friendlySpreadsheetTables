@@ -21,13 +21,10 @@ class Utility
      */
     public static function validSheetCell(string $column, $row) : bool
     {
-        $columnRegex = '/^[[A-Z][a-z]]+$/';
+        $columnRegex = '/^[A-Za-z]+$/';
         $rowRegex = '/^[1-9][0-9]*$/';
 
-        if (preg_match($rowRegex, $row) &&
-            preg_match($columnRegex, $column)) {
-            return true;
-        } else
-            return true;
+        return preg_match($rowRegex, $row) &&
+            preg_match($columnRegex, $column);
     }
 }
