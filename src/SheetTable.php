@@ -361,7 +361,7 @@ class SheetTable extends AnchorableEntity
         }
 
         if($this->getFooter() !== NULL) {
-            $heights += $this->getFooter()->getSheetCellHeight();
+            $height += $this->getFooter()->getSheetCellHeight();
         }
 
         return $height;
