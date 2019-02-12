@@ -13,6 +13,7 @@ $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 $table = (new SheetTable())->addElements(
     new SheetTableColumn(),
     new SheetTableColumn(),
+    new SheetTableColumn(),
     new SheetTableColumn()
 );
 
