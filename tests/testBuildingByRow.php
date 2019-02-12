@@ -15,7 +15,7 @@ $table = (new SheetTable())->addElements(
     new SheetTableColumn(),
     new SheetTableColumn(),
     new SheetTableColumn()
-);
+)->setHeader('Table 1');
 
 $table->addValues(
     [1],
@@ -24,7 +24,12 @@ $table->addValues(
     [10, 11, 12, 13]
 );
 
-$facade->addTables($table)->export();
+$table2 = (new SheetTable())->addElements(new SheetTableColumn(),
+    new SheetTableColumn())->setHeader('Table 2');
+
+$table2->addValues([6, 23], [3, 2, 1, 6], [1, 2 ,3]);
+
+$facade->applyDefaultStyle(true)->addTables($table, $table2)->export();
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);
 $writer->save("test.xls");
