@@ -355,15 +355,16 @@ class SheetTable extends AnchorableEntity
             }
         }
 
+        $height = max($heights);
         if($this->getHeader() !== NULL) {
-            $heights[] = $this->getHeader()->getSheetCellHeight();
+            $height += $this->getHeader()->getSheetCellHeight();
         }
 
         if($this->getFooter() !== NULL) {
-            $heights[] = $this->getFooter()->getSheetCellHeight();
+            $heights += $this->getFooter()->getSheetCellHeight();
         }
 
-        return max($heights);
+        return $height;
     }
 
     /**
