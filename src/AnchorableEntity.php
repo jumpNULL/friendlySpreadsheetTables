@@ -166,7 +166,7 @@ abstract class AnchorableEntity
             $height = $this->getSheetCellHeight();
 
             $cellColumn = $this->cellAnchor->column;
-            for (; $width > 1; $cellColumn++, $width--) ;
+            for (; $width > 1; $cellColumn++, $width--);
 
             $cellRow = $this->cellAnchor->row + --$height;
 

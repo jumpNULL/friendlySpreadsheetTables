@@ -29,7 +29,7 @@ $table2 = (new SheetTable())->addElements(new SheetTableColumn(),
 
 $table2->addValues([6, 23], [3, 2, 1, 6], [1, 2 ,3]);
 
-$facade->applyDefaultStyle(true)->addTables($table, $table2)->export();
+$facade->addTables($table)->applyDefaultStyle(true)->addTables($table2)->export();
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);
 $writer->save("test.xls");

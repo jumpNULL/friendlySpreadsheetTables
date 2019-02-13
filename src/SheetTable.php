@@ -109,7 +109,7 @@ class SheetTable extends AnchorableEntity
         $lowestRow = $this->getLowerRightCell()->row;
         //footer cell comes last
         if($this->footer !== NULL) {
-            $this->footer->anchor($this->getAnchor()->column, ++$lowestRow);
+            $this->footer->anchor($this->getAnchor()->column, $lowestRow);
         }
 
         return $this;
@@ -172,12 +172,11 @@ class SheetTable extends AnchorableEntity
         $elementCount = count($this->getElements());
 
         foreach($valueArrays as $array){
-            $index = 0;
             for ($index = 0; $index < $elementCount; $index++){
                 if (isset($array[$index])) {
-                    $this->getElements()[$index]->addValues([$array[$index]]);
+                    $this->getElements()[$index]->addValues($array[$index]);
                 } else {
-                    $this->getElements()[$index]->addValues(['']);
+                    $this->getElements()[$index]->addValues('');
                 }
             }
         }
@@ -361,7 +360,7 @@ class SheetTable extends AnchorableEntity
         }
 
         if($this->getFooter() !== NULL) {
-            $heights += $this->getFooter()->getSheetCellHeight();
+            $height += $this->getFooter()->getSheetCellHeight();
         }
 
         return $height;
