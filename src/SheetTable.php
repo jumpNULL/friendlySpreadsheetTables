@@ -101,15 +101,18 @@ class SheetTable extends AnchorableEntity
             $tableRow += $this->getHeader()->getSheetCellHeight();
         }
 
+        $lowestRow = $this->getLowerRightCell()->row;
+
+        //This logic is insufficient, as each element is not aware of other elements heights,
+        //each elements footer is rendered in an inconsistent manner
         foreach ($this->tableElements as $element) {
             $element->anchor($tableColumn, $tableRow);
             for ($width = $element->getSheetCellWidth(); $width >= 1; $tableColumn++, $width--);
         }
 
-        $lowestRow = $this->getLowerRightCell()->row;
         //footer cell comes last
         if($this->footer !== NULL) {
-            $this->footer->anchor($this->getAnchor()->column, ++$lowestRow);
+            $this->footer->anchor($this->getAnchor()->column, $lowestRow);
         }
 
         return $this;
@@ -172,12 +175,11 @@ class SheetTable extends AnchorableEntity
         $elementCount = count($this->getElements());
 
         foreach($valueArrays as $array){
-            $index = 0;
             for ($index = 0; $index < $elementCount; $index++){
                 if (isset($array[$index])) {
-                    $this->getElements()[$index]->addValues([$array[$index]]);
+                    $this->getElements()[$index]->addValues($array[$index]);
                 } else {
-                    $this->getElements()[$index]->addValues(['']);
+                    $this->getElements()[$index]->addValues('');
                 }
             }
         }
@@ -242,6 +244,7 @@ class SheetTable extends AnchorableEntity
 
         return NULL;
     }
+
     /**
      * Sets the tables style. A tables style applies to all elements it contains.
      * It is important however to note, however, that an elements style takes

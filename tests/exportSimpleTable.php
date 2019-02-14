@@ -20,18 +20,18 @@ $table->addElements(
 
 //Test adding data to table directly where data count is less than number of
 //columns, equal to number of columns, and greater than number of columns
-$table->addValues([
+$table->addValues(
     [4], //When there is insufficient data
     [5, 6],
     [7, 8, 9] //When data count is greater than column count, extra data is discarded and exception thrown
-]);
+);
 
 
 //Use the Facade to create a PhpSpreadsheet
 $spreadsheet = new SpreadSheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 
-$facade->addTables($table)->export();
+$facade->addTables($table)->applyDefaultStyle($table)->export();
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
-$writer = new Xls($spreadsheet);
-$writer->save("test.xls");
+$writerXls = new Xls($spreadsheet);
+$writerXls->save("simpleTable.xls");

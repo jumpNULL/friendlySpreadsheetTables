@@ -31,7 +31,6 @@ class SpreadsheetTableFacade
 
     private $tables;
     private $anchorCell;
-    private $applyDefaultStyling;
     private $sheet;
     private $divisorFunction;
     private $defaultStyles = [
@@ -46,7 +45,14 @@ class SpreadsheetTableFacade
                 ],
             ]
         ],
-        'defaultTableFooterStyle' => [],
+        'defaultTableFooterStyle' => [
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+            ],
+            'font' => [
+                'bold' => true
+            ]
+        ],
         'defaultColumnHeaderStyle' => [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -60,7 +66,7 @@ class SpreadsheetTableFacade
         'defaultTableStyle' => [
             'borders' => [
                 'outline' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
                 ],
                 'inside' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
@@ -77,19 +83,14 @@ class SpreadsheetTableFacade
         $this->sheet = $sheet;
         $this->anchorCell = (object)['column' => $anchorColumn, 'row' => $anchorRow];
         $this->tables = array();
-        $this->applyDefaultStyling = false;
     }
 
     public function export(): SpreadsheetTableFacade
     {
+        $this->sheet->getDefaultRowDimension()->setRowHeight(15);
         $anchorCell = clone $this->anchorCell;
 
         foreach ($this->tables as $table) {
-            if ($this->applyDefaultStyling) {
-                $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
-                $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
-                $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
-            }
 
             $table->anchor($anchorCell->column, $anchorCell->row);
             $this->renderTable($table);
@@ -109,9 +110,7 @@ class SpreadsheetTableFacade
         foreach($this->tables as $table){
             for( $column = $table->getAnchor()->column, $tableEndColumn = $table->getLowerRightCell()->column; $column <= $tableEndColumn; $column++)
             {
-                var_dump($column);
                 $this->sheet->getColumnDimension($column)->setAutoSize(true);
-                //padding tends to be too generous so we remove some
             }
         }
 
@@ -128,16 +127,13 @@ class SpreadsheetTableFacade
      */
     public function renderTable(SheetTable $table): Worksheet
     {
-        $anchorCell = $table->getAnchor();
-        $rightCell = $table->getLowerRightCell();
         //apply style over range
-
         $this->sheet->getStyle($table->getAnchorAddress() . ':' . $table->getLowerRightCellAddress())->applyFromArray($table->getStyleArray());
 
         if ($table->getHeader() !== NULL) {
             if ($table->getSheetCellWidth() > 1) {
                 try {
-                    $this->sheet->mergeCells($table->getAnchorAddress() . ':' . $rightCell->column . $anchorCell->row);
+                    $table->getHeader()->setSheetCellWidth($table->getSheetCellWidth());
                 } catch (\Exception $e) {
                     throw $e;
                 };
@@ -154,17 +150,17 @@ class SpreadsheetTableFacade
                 $this->renderTable($entity);
             }
         }
+
+        //Footer
         if ($table->getFooter() !== NULL) {
-            //render footer
-            $rightCell = $table->getLowerRightCell();
-            $rightCell->row = $table->getAnchor()->row;
             if ($table->getSheetCellWidth() > 1) {
                 try {
-                    $this->sheet->mergeCells($table->getAnchorAddress() . ':' . $rightCell->column . $rightCell->row);
+                    $table->getFooter()->setSheetCellWidth($table->getSheetCellWidth());
                 } catch (\Exception $e) {
                     throw $e;
                 };
             }
+
             $this->renderCell($table->getFooter());
         }
         return $this->sheet;
@@ -179,10 +175,6 @@ class SpreadsheetTableFacade
      */
     public function renderColumn(SheetTableColumn $column): SpreadsheetTableFacade
     {
-        if ($this->applyDefaultStyling) {
-                $column->setHeaderStyleArray($this->defaultStyles['defaultColumnHeaderStyle']);
-                $column->setFooterStyleArray($this->defaultStyles['defaultColumnFooterStyle']);
-        }
 
         $this->sheet->getStyle($column->getAnchorAddress() . ':' . $column->getLowerRightCellAddress())->applyFromArray($column->getStyleArray());
         //If column size is greater than unity, merge cells to which column will map
@@ -261,15 +253,25 @@ class SpreadsheetTableFacade
     }
 
     /**
-     * Applies default styling to tables. Provided for convenience.
+     * Applies default styling to tables and columns. Provided for convenience.
      *
-     * @param bool $apply
+     * @param SheetTable[] $tables
      *
      * @return SpreadsheetTableFacade
      */
-    public function applyDefaultStyle(bool $apply): self
+    public function applyDefaultStyle(SheetTable ...$tables): self
     {
-        $this->applyDefaultStyling = $apply;
+        foreach($tables as $table) {
+            $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
+            $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
+            $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);
+            foreach($table->getElements() as $element) {
+                if(get_class($element) == SheetTableColumn::class) {
+                    $element->setHeaderStyleArray($this->defaultStyles['defaultColumnHeaderStyle']);
+                    $element->setFooterStyleArray($this->defaultStyles['defaultColumnFooterStyle']);
+                }
+            }
+        }
         return $this;
     }
 }
