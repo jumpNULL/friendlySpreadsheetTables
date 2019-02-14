@@ -15,7 +15,6 @@ use \PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 $spreadsheet = new Spreadsheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
-$facade->applyDefaultStyle(true);
 
 //Declare our tables
 $tableArgentina = new SheetTable();
@@ -24,6 +23,19 @@ $tableExpenditure = new SheetTable();
 $tableOtherExpenses = new SheetTable();
 
 //Build tables
+
+$header = (new SheetTable())->addElements(
+    new SheetTableColumn(NULL, 6),
+    new SheetTableColumn(NULL, 6),
+    new SheetTableColumn(NULL, 3)
+);
+
+$header->addValues(
+    ['Período fiscal: 23/04/2018', 'Confeccionó: ', 'Fecha: '],
+    ['Contribuyente: John Jane-Doe', 'Revisó: ', 'Fecha: ']
+);
+
+
 $tableForeign->setHeader('FUENTE EXTRANJERA')->addElements(
     (new SheetTableColumn())->setSheetCellWidth(3)->addValues('', 'Ingresos', 'Interes cuenta', 'Interes Inversion', 'Dividendos / Utilidades'),
     (new SheetTable())->addElements(
@@ -62,8 +74,15 @@ $tableOtherExpenses->addElements(
     (new SheetTableColumn())->setHeader('Total')
 );
 
+$tableArray = [
+    $tableForeign,
+    $tableArgentina,
+    $tableExpenditure,
+    $tableOtherExpenses
+];
+
 //Add them to facade for rendering
-$facade->addTables($tableForeign, $tableArgentina, $tableExpenditure, $tableOtherExpenses)->export();
+$facade->applyDefaultStyle(...$tableArray)->addTables($header,...$tableArray)->export();
 
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);

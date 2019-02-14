@@ -31,7 +31,7 @@ $table->addValues(
 $spreadsheet = new SpreadSheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 
-$facade->addTables($table)->applyDefaultStyle(true)->export();
+$facade->addTables($table)->applyDefaultStyle($table)->export();
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writerXls = new Xls($spreadsheet);
-$writerXls->save("test.xls");
+$writerXls->save("simpleTable.xls");
