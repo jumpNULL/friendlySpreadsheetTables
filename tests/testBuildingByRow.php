@@ -6,8 +6,9 @@ use \Crombi\PhpSpreadsheetHelper\SpreadsheetTableFacade;
 use \Crombi\PhpSpreadsheetHelper\SheetTableColumn;
 use \Crombi\PhpSpreadsheetHelper\SheetTable;
 use \PhpOffice\PhpSpreadsheet\Writer\Xls;
+use \PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+$spreadsheet = new Spreadsheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 
 $table = (new SheetTable())->addElements(
@@ -29,7 +30,7 @@ $table2 = (new SheetTable())->addElements(new SheetTableColumn(),
 
 $table2->addValues([6, 23], [3, 2, 1, 6], [1, 2 ,3]);
 
-$facade->addTables($table)->applyDefaultStyle(true)->addTables($table2)->export();
+$facade->addTables($table)->applyDefaultStyle($table)->addTables($table2)->export();
 //Write out the PhpSpreadsheet using the PhpSpreadsheet writer
 $writer = new Xls($spreadsheet);
-$writer->save("test.xls");
+$writer->save("buildingByRow.xls");

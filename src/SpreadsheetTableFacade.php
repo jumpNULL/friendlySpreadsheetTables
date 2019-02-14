@@ -87,6 +87,7 @@ class SpreadsheetTableFacade
 
     public function export(): SpreadsheetTableFacade
     {
+        $this->sheet->getDefaultRowDimension()->setRowHeight(15);
         $anchorCell = clone $this->anchorCell;
 
         foreach ($this->tables as $table) {
@@ -105,6 +106,15 @@ class SpreadsheetTableFacade
                 $anchorCell->row += 2;
             }
         }
+
+        //after all tables are anchored and rendered we resize all columns within their ranges
+        foreach($this->tables as $table){
+            for( $column = $table->getAnchor()->column, $tableEndColumn = $table->getLowerRightCell()->column; $column < $tableEndColumn; $column++)
+            {
+                $this->sheet->getColumnDimension($column)->setAutoSize(true);
+            }
+        }
+
         return $this;
     }
 
@@ -246,13 +256,13 @@ class SpreadsheetTableFacade
     /**
      * Applies default styling to tables and columns. Provided for convenience.
      *
-     * @param bool $apply
+     * @param SheetTable[] $tables
      *
      * @return SpreadsheetTableFacade
      */
-    public function applyDefaultStyle(): self
+    public function applyDefaultStyle(SheetTable ...$tables): self
     {
-        foreach($this->tables as $table) {
+        foreach($tables as $table) {
             $table->setStyleArray($this->defaultStyles['defaultTableStyle']);
             $table->setHeaderStyleArray($this->defaultStyles['defaultTableHeaderStyle']);
             $table->setFooterStyleArray($this->defaultStyles['defaultTableFooterStyle']);

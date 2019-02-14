@@ -5,8 +5,9 @@ require '../vendor/autoload.php';
 use \Crombi\PhpSpreadsheetHelper\SpreadsheetTableFacade;
 use \Crombi\PhpSpreadsheetHelper\SheetTableColumn;
 use \PhpOffice\PhpSpreadsheet\Writer\Xls;
+use \PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+$spreadsheet = new Spreadsheet();
 $facade = new SpreadsheetTableFacade($spreadsheet->getActiveSheet());
 $column = new SheetTableColumn(NULL, 2);
 $columnTwo = new SheetTableColumn();
@@ -24,4 +25,4 @@ $table->anchor('A', 1);
 $facade->renderTable($table);
 
 $writer = new Xls($spreadsheet);
-$writer->save("test.xls");
+$writer->save("columns.xls");
