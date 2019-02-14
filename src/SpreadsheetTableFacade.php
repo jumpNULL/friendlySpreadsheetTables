@@ -105,6 +105,16 @@ class SpreadsheetTableFacade
                 $anchorCell->row += 2;
             }
         }
+        //after all tables are anchored and rendered we resize all columns within their ranges
+        foreach($this->tables as $table){
+            for( $column = $table->getAnchor()->column, $tableEndColumn = $table->getLowerRightCell()->column; $column <= $tableEndColumn; $column++)
+            {
+                var_dump($column);
+                $this->sheet->getColumnDimension($column)->setAutoSize(true);
+                //padding tends to be too generous so we remove some
+            }
+        }
+
         return $this;
     }
 
